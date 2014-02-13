@@ -12,7 +12,7 @@ Contents:
    :maxdepth: 2
 
    intro
-   step1
+   create_django_project
 
 Indices and tables
 ==================
