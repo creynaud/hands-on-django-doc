@@ -65,7 +65,7 @@ We need to tell Django were to look for our html template, so add the following 
 
 Refresh http://127.0.0.1:8000/. Your home page should render correctly now.
 
-So far we only rendered a static html page. We don't need Django for that ;). So let's modify our view again to see how showing dynamic content.
+So far we only rendered a static html page. We don't need Django for that ;). So let's modify our view again to see how to show some dynamic content.
 Let's add a date in the context used to render the template:
 
 .. code-block:: python
@@ -99,4 +99,14 @@ And let's modify the template too:
     </body>
     </html>
 
-Refresh http://127.0.0.1:8000/. Your home page shows some dynamic content now.
+Refresh http://127.0.0.1:8000/ and have a look at your dynamic home page.
+
+Now is a good time to start writing tests.
+
+Create a tests folder at the root of your project, and a tests_home.py file in it.
+
+.. code-block:: bash
+
+    $ ls
+
+Don't forget to commit your changes regularly.

@@ -1,12 +1,16 @@
 Python Survival Kit
 ===================
 
+Python is a dynamically typed language. TODO see what is said in wikipedia.
+TODO what is the difference between a tuple and a list
+TODO add an if else in the code example
+
 .. literalinclude:: complex.py
 
 
 Copy the previous code into a complex.py file, then launch the python interpreter in the directory containing the complex.py file:
 
-.. code-block:: python
+.. code-block:: bash
 
     $ python
     $ Python 2.7.5+ (default, Sep 19 2013, 13:48:49)

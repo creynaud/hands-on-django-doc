@@ -1,14 +1,14 @@
 Create the Notes Django project
 ===============================
 
-.. code-block:: python
+.. code-block:: bash
 
     pony@Pony-VirtualBox:~$ mkdir hands-on-django
     pony@Pony-VirtualBox:~$ cd hands-on-django
 
 Create a virtualenv for the new project. This is were all the project dependencies will reside, without polluting or conflicting with the system libraries.
 
-.. code-block:: python
+.. code-block:: bash
 
     pony@Pony-VirtualBox:~/hands-on-django$ mkvirtualenv --python=python2.7 hands-on-django
     Running virtualenv with interpreter /usr/bin/python2.7
@@ -25,7 +25,7 @@ Create a virtualenv for the new project. This is were all the project dependenci
 
 Install Django:
 
-.. code-block:: python
+.. code-block:: bash
 
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install Django
     Downloading/unpacking Django
@@ -38,7 +38,7 @@ Install Django:
 
 Create the notes Django project by calling django-admin.py:
 
-.. code-block:: python
+.. code-block:: bash
 
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ django-admin.py help
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ django-admin.py startproject notes .
@@ -64,7 +64,7 @@ Pycharm will re-build its indexes.
 
 Try to run the project, either in Pycharm or via the command line:
 
-.. code-block:: python
+.. code-block:: bash
 
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py runserver
     Validating models...
@@ -77,11 +77,52 @@ Try to run the project, either in Pycharm or via the command line:
 
 Open http://127.0.0.1:8000/ in Firefox or Chrome. You should see a page saying "It worked!".
 
-Let's have a look at all the files that were created when starting the new Django project.
+Go to http://127.0.0.1:8000/admin/. You don't have an admin user yet, let's create one.
+
+.. code-block:: bash
+
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py createsuperuser
+    Traceback (most recent call last):
+      File "manage.py", line 10, in <module>
+        execute_from_command_line(sys.argv)
+      ...
+    django.db.utils.OperationalError: no such table: auth_user
+
+We get an error because the users table is not defined in our database yet.
+So let's populate the database by calling 'python manage.py syncdb'.
+This will also let you create an admin user.
+
+.. code-block:: bash
+
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py syncdb
+    Creating tables ...
+    Creating table django_admin_log
+    Creating table auth_permission
+    Creating table auth_group_permissions
+    Creating table auth_group
+    Creating table auth_user_groups
+    Creating table auth_user_user_permissions
+    Creating table auth_user
+    Creating table django_content_type
+    Creating table django_session
+
+    You just installed Django's auth system, which means you don't have any superusers defined.
+    Would you like to create one now? (yes/no): yes
+    Username (leave blank to use 'pony'):
+    Email address: pony@acme.com
+    Password:
+    Password (again):
+    Superuser created successfully.
+    Installing custom SQL ...
+    Installing indexes ...
+    Installed 0 object(s) from 0 fixture(s)
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+
+Have a look at all the files that were created when starting the new Django project.
 
 Before going to the next step, save your work in git.
 
-.. code-block:: python
+.. code-block:: bash
 
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ git init
     Initialized empty Git repository in /home/pony/hands-on-django/.git/
