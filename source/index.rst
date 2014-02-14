@@ -15,6 +15,7 @@ Contents:
    python_survival_kit
    create_django_project
    home
+   notesapp
    what_to_do_next
 
 Indices and tables
