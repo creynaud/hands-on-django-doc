@@ -2,8 +2,11 @@ Let's implement a 1st view: the home page
 =========================================
 
 To implement the home view, we will need to write a bit of html and a bit of python code.
-
 So far we just want the home view to display a custom welcome message.
+
+Implementing the view
+---------------------
+
 Let's uncomment the following line in notes/urls.py:
 
 .. code-block:: python
@@ -53,7 +56,7 @@ Let's make our home view render this template instead of our 'Welcome!' string, 
         context = RequestContext(request, {})
         return HttpResponse(template.render(context))
 
-Have a look at http://127.0.0.1:8000/, you should see an error message saying the html template file cannot be found.
+Have a look at http://127.0.0.1:8000/, you should see a TemplateDoesNotExist stack trace because the html template file cannot be found.
 
 We need to tell Django were to look for our html template, so add the following lines at the end of the settings.py file:
 
@@ -101,12 +104,58 @@ And let's modify the template too:
 
 Refresh http://127.0.0.1:8000/ and have a look at your dynamic home page.
 
+Testing
+-------
+
 Now is a good time to start writing tests.
 
-Create a tests folder at the root of your project, and a tests_home.py file in it.
+Create a python package named 'tests' at the root of your project, and a tests_home.py file in it.
+A python package is just a folder containing an empty __init__.py file, so create a 'tests' folder and add an empty __init__.py file in it.
+
+Also add a tests_home.py file inside the tests package.
+
+We are going to use django-webtest (https://pypi.python.org/pypi/django-webtest) to write our tests, not the vanilla Django tests.
+So let's install django-webtest in our virtualenv:
 
 .. code-block:: bash
 
-    $ ls
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install django-webtest webtest
 
-Don't forget to commit your changes regularly.
+Copy/paste the following test code and for now just try to understand what the tests do. For example find what 'reverse' does in the Django doc.
+
+.. code-block:: python
+
+    from django.contrib.auth.models import User
+    from django.core.urlresolvers import reverse
+    from django_webtest import WebTest
+
+
+    class HomeTests(WebTest):
+        def test_home_not_authenticated(self):
+            url = reverse('home')
+            response = self.app.get(url)
+            self.assertContains(response, 'Welcome!')
+
+        def test_home_authenticated(self):
+            url = reverse('home')
+            user = User(username='sheldon', email='sheldon@cooper.net')
+            user.save()
+            response = self.app.get(url, user=user)
+            self.assertContains(response, 'Welcome {0}!'.format(user.email))
+
+Try to run the tests from the command line:
+
+.. code-block:: bash
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py test
+    Creating test database for alias 'default'...
+    ..
+    ----------------------------------------------------------------------
+    Ran 2 tests in 0.040s
+
+    OK
+    Destroying test database for alias 'default'...
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+
+Also create a run configuration for the tests in Pycharm. Make sure to add DJANGO_SETTINGS_MODULE with notes.settings as value in the tests configuration environment variables.
+
+Don't forget to commit your changes before going to the next step.

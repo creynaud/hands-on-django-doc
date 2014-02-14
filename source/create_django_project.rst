@@ -6,6 +6,8 @@ Create the Notes Django project
     pony@Pony-VirtualBox:~$ mkdir hands-on-django
     pony@Pony-VirtualBox:~$ cd hands-on-django
 
+Creating a virtualenv
+
 Create a virtualenv for the new project. This is were all the project dependencies will reside, without polluting or conflicting with the system libraries.
 
 .. code-block:: bash
@@ -35,6 +37,9 @@ Install Django:
     Successfully installed Django
     Cleaning up...
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+
+Creating the Django project
+---------------------------
 
 Create the notes Django project by calling django-admin.py:
 
@@ -76,6 +81,9 @@ Try to run the project, either in Pycharm or via the command line:
     Quit the server with CONTROL-C.
 
 Open http://127.0.0.1:8000/ in Firefox or Chrome. You should see a page saying "It worked!".
+
+Running the admin and syncing the database
+------------------------------------------
 
 Go to http://127.0.0.1:8000/admin/. You don't have an admin user yet, let's create one.
 
