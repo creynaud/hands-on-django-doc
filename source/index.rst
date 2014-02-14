@@ -12,7 +12,9 @@ Contents:
    :maxdepth: 2
 
    intro
+   python_survival_kit
    create_django_project
+   home
 
 Indices and tables
 ==================
