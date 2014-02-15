@@ -122,6 +122,7 @@ So let's install django-webtest in our virtualenv:
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install django-webtest webtest
 
 Copy/paste the following test code and for now just try to understand what the tests do. For example find what 'reverse' does in the Django doc.
+Try to call 'print response' or 'response.showbrowser()'.
 
 .. code-block:: python
 

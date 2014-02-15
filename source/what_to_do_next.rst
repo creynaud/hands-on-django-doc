@@ -1,6 +1,7 @@
 What to do next?
 ================
 
+* Static files deployment, Amazon S3
 * South/Django 1.7 database migrations
 * Sentry
 * The 12 factor app
