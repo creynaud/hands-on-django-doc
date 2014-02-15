@@ -19,6 +19,7 @@ Contents:
    my_notes_class_based_view
    django_allauth
    note_detail_view
+   note_edition_view
    what_to_do_next
 
 Indices and tables
