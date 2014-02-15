@@ -16,6 +16,7 @@ Contents:
    create_django_project
    home
    notesapp
+   my_notes_class_based_view
    what_to_do_next
 
 Indices and tables
