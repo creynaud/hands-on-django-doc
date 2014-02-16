@@ -20,6 +20,7 @@ Contents:
    django_allauth
    note_detail_view
    note_edition_view
+   base_template
    what_to_do_next
 
 Indices and tables
