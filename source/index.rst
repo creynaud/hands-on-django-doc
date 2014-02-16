@@ -23,6 +23,7 @@ Contents:
    base_template
    more_templates_refactoring
    add_delete_notes_views
+   deploy_to_heroku
    what_to_do_next
 
 Indices and tables

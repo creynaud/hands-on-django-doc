@@ -6,7 +6,7 @@ What to do next?
 * Sentry
 * The 12 factor app
 * Heroku add-ons (postgres backups, + a lot of useful services like loggly, mandrill)
-* Postgres app on Mac (provided by the Heroku team)
+* Use Postgresql for local development. See Postgres app on Mac (provided by the Heroku team).
 * Django REST framework doc
 * Django doc
 * django secure doc

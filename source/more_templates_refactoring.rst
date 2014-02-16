@@ -10,7 +10,7 @@ There are several things we will do:
 * Refactor our notes views to always show the list of notes
 
 Using bootstrap in base.html
-============================
+----------------------------
 
 Bootstrap (http://getbootstrap.com/) is a popular framework that helps you "bootstrap" a web front-end, by providing some CSS, javascript and fonts.
 With Bootstrap you can easily implement responsive websites that will show up nicely on mobile devices.
@@ -108,6 +108,9 @@ Create a css file: notes/static/notes/css/theme.css (notes/static is the folder 
     #messages {
         padding-top: 10px;
     }
+
+Refactor the notes views to always show the list of notes
+---------------------------------------------------------
 
 We want to show the notes list in all the notes views now. So let's create the following mixin in notesapp/views.py
 
