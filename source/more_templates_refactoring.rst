@@ -12,10 +12,37 @@ There are several things we will do:
 Using bootstrap in base.html
 ============================
 
-Bootstrap (http://getbootstrap.com/) is a popular framework that helps you "bootstrap" a web front-end, by providing some CSS, javascript, fonts.
+Bootstrap (http://getbootstrap.com/) is a popular framework that helps you "bootstrap" a web front-end, by providing some CSS, javascript and fonts.
 With Bootstrap you can easily implement responsive websites that will show up nicely on mobile devices.
 
-django-bootstrap3
+We are also going to use django-bootstrap3, which is a helper package:
+
+.. code-block:: bash
+
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install django-bootstrap3
+
+Let's update our settings.py:
+
+.. code-block:: python
+
+     INSTALLED_APPS = (
+         'django.contrib.admin',
+         'django.contrib.auth',
+         'django.contrib.contenttypes',
+         'django.contrib.sessions',
+         'django.contrib.sites',
+         'django.contrib.messages',
+         'django.contrib.staticfiles',
+         'notesapp',
+         'allauth',
+         'allauth.account',
+         'allauth.socialaccount',
+    +    'bootstrap3',
+     )
+
+    +STATICFILES_DIRS = (
+    +    os.path.join(BASE_DIR, 'notes/static'),
+    +)
 
 Here is our new base.html template that uses bootstrap (it is more or less this bootstrap example: http://getbootstrap.com/examples/starter-template/):
 
@@ -65,8 +92,94 @@ Here is our new base.html template that uses bootstrap (it is more or less this 
         {% block content %}{% endblock %}
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     {% bootstrap_javascript %}
     </body>
     </html>
 
-Bla
+Create a css file: notes/static/notes/css/theme.css (notes/static is the folder we set in STATICFILES_DIRS in settings.py)
+
+.. code-block:: css
+
+    .container-top-padding {
+        padding-top: 50px;
+    }
+
+    #messages {
+        padding-top: 10px;
+    }
+
+We want to show the notes list in all the notes views now. So let's create the following mixin in notesapp/views.py
+
+.. code-block:: python
+
+    class UserNotesInContextMixin(object):
+    def get_context_data(self, **kwargs):
+        context = super(UserNotesInContextMixin, self).get_context_data(**kwargs)
+        context['notes'] = Note.objects.filter(owner=self.request.user)
+        return context
+
+Make all the notes view classes inherit from this mixin 1st, e.g:
+
+.. code-block:: python
+
+    class MyNotes(UserNotesInContextMixin, ListView):
+        ....
+
+Now we can modify the notes view templates. All the notes views should show the list of notes, so let's add an intermediate parent template.
+Let's add a notesapp/templates/notesapp/base.html, that shows the notes list on the left ({% block content_left %}), and something else on the right ({% block content_right %}).
+Note the col-md-3 and col-md-9 css classes. These are bootstrap classes that say the left content takes 3 columns and the right content takes 9 columns (there are 12 columns total).
+
+.. code-block:: html
+
+    {% extends "base.html" %}
+
+    {% block content %}
+        <div class="row">
+            <div class="col-md-3">
+                {% block content_left %}
+                    <h1>
+                        My Notes
+                        <a href=""><span class="glyphicon glyphicon-plus"></span></a>
+                    </h1>
+                    {% if notes %}
+                        <ul>
+                            {% for note in notes %}
+                                <li><a href="{% url 'note_detail' note.id %}">{{ note.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>You don't have any note yet.</p>
+                    {% endif %}
+                {% endblock %}
+            </div>
+            <div class="col-md-9">
+                {% block content_right %}{% endblock %}
+            </div>
+        </div>
+    {% endblock %}
+
+Now the note edition template will look like this:
+
+.. code-block:: html
+
+    {% extends "notesapp/base.html" %}
+
+    {% load bootstrap3 %}
+
+    {% block head_title %}Edit Note{% endblock %}
+
+    {% block content_right %}
+        <h1>Edit note '{{ note.title }}'</h1>
+
+        <form method="post" id="edit-note-form">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+                <input type="submit" value="Update" class="btn btn-primary">
+                <a href="{% url 'note_detail' note.id %}" class="btn btn-default">Cancel</a>
+            {% endbuttons %}
+        </form>
+    {% endblock %}
+
+Finally modify the last templates: my_notes.html and note_detail.html. Let's just display the 1st note detail on the right side in the notes view (we don't want to show the notes list twice).
