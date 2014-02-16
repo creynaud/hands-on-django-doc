@@ -14,12 +14,12 @@ Let's add a base.html template in notes/templates. Naming the root template base
         <title>{% block head_title %}Notes{% endblock %}</title>
     </head>
     <body>
-    <a href="{% url "home" %}">Home</a>
+    <a href="{% url 'home' %}">Home</a>
     {% if user.is_authenticated %}
-        <a href="{% url "my_notes" %}">My Notes</a>
-        <a href="{% url "account_logout" %}">Logout</a>
+        <a href="{% url 'my_notes' %}">My Notes</a>
+        <a href="{% url 'account_logout' %}">Logout</a>
     {% else %}
-        <a href="{% url "account_login" %}">Login</a>
+        <a href="{% url 'account_login' %}">Login</a>
     {% endif %}
 
     {% block content %}{% endblock %}

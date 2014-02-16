@@ -21,6 +21,7 @@ Contents:
    note_detail_view
    note_edition_view
    base_template
+   more_templates_refactoring
    what_to_do_next
 
 Indices and tables
