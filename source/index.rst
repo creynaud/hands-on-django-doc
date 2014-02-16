@@ -25,6 +25,7 @@ Contents:
    add_delete_notes_views
    deploy_to_heroku
    what_to_do_next
+   ubuntu_vm
 
 Indices and tables
 ==================
