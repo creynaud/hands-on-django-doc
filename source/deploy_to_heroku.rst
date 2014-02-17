@@ -4,15 +4,15 @@ Deploying the notes web app
 How is this going to work?
 --------------------------
 
-Here is how our app will run on Heroku:
+Here is how our notes web app will run on Heroku:
 
 * We are going to push our web app git local repository to a remote heroku origin
 * After the push, Heroku will download our app requirements, build the app and create a "slug". A "slug" is a snapshot of our app that can be easily deployed on a Heroku "dyno". A Heroku "dyno" can be seen as a small Virtual Machine with an ephemeral file system. To scale the app up or down, one can add/remove "dynos".
 * An instance of the note app that runs on a "dyno" is stateless. Sessions are tracked in the database, not inside the "dyno" itself.
 * The Postgresql database can be provided by Heroku via an add-on: https://addons.heroku.com/
-* Heroku expects that the web app configuration is defined as environment variables. For example, when one adds a postgresql add-on to an Heroku app, a DATABASE_URL variable is added to the environment of the app.
-* We will tell Heroku to run our app on gunicorn, a wsgi server, by creating a Procfile.
-* Our app static files (e.g theme.css) will also be served by the "dynos", thank to dj-static. Note that we could serve the static files via Amazon S3 (http://aws.amazon.com/en/s3/), but we won't do it during this workshop for the sake of simplicity.
+* Heroku expects that the web app configuration is defined as environment variables. For example, when one adds a postgresql add-on to a Heroku app, a DATABASE_URL variable is added to the environment of the app.
+* We will tell Heroku to run our app on gunicorn (http://gunicorn.org/), a python WSGI HTTP server, by creating a Procfile.
+* Our app static files (e.g theme.css) will also be served by the "dynos", thank to dj-static (https://github.com/kennethreitz/dj-static). Note that another option could be to serve the static files via Amazon S3 (http://aws.amazon.com/en/s3/), but we won't do it during this workshop for the sake of simplicity.
 
 Some documentation pointers to get started
 ------------------------------------------
@@ -34,7 +34,7 @@ As Heroku expects the configuration to be defined as environment variables, let'
 * SECRET_KEY
 * DJANGO_SETTINGS_MODULE
 
-We are going to modify our settings.py file to get its values from these environment variables:
+We are going to modify our settings.py file to get its values from these environment variables (also install dj-database-url):
 
 .. code-block:: python
     :emphasize-lines: 12, 16, 19, 22, 32
@@ -130,7 +130,59 @@ We also need to change the notes.wsgi file to the following:
 Listing the requirements of the project for deployment
 ------------------------------------------------------
 
-To get a list of the requirements of the project,
+To get a list of the requirements of the project, call pip freeze:
+
+.. code-block:: bash
+
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip freeze
+    Django==1.6.2
+    WebOb==1.3.1
+    .......
+    waitress==0.8.8
+    wsgiref==0.1.2
+
+Some of these requirements are only needed for development, so let's split the requirements in 2 lists: one for development, and one for deployment.
+The following requirements should go in a requirements.txt file at the root of your project:
+
+.. code-block:: python
+
+    Django==1.6.2
+    argparse==1.2.1
+    dj-database-url==0.2.2
+    dj-static==0.0.5
+    django-allauth==0.15.0
+    django-bootstrap3==2.5.6
+    gunicorn==18.0
+    oauthlib==0.6.1
+    psycopg2==2.5.2
+    pystache==0.5.3
+    python-openid==2.2.5
+    requests==2.2.1
+    requests-oauthlib==0.4.0
+    six==1.5.2
+    sqlparse==0.1.11
+    static==1.0.2
+    wsgiref==0.1.2
+
+The following requirements should go in a requirements-dev.txt file:
+
+.. code-block:: python
+
+    -r requirements.txt
+    WebOb==1.3.1
+    WebTest==2.0.14
+    argparse==1.2.1
+    beautifulsoup4==4.3.2
+    django-debug-toolbar==1.0.1
+    django-webtest==1.7.6
+    factory-boy==2.3.1
+    waitress==0.8.8
+
+Note: if you checkout the project on another machine, you can install all the requirements like this:
+
+.. code-block:: bash
+
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install -r requirements-dev.txt
 
 Prepare the notes web app on Heroku
 -----------------------------------
@@ -147,6 +199,5 @@ Add the public key (~/.ssh/id_rsa.pub) to your Heroku account.
 
 Create an app (either in the US or Europe), and also add the Heroku postgres add-on to the app.
 
-Make the notes web app deployable
----------------------------------
+Add heroku origin, and push your local repository to heroku.
 
