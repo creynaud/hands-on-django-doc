@@ -135,4 +135,5 @@ Before going to the next step, save your work in git.
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ git init
     Initialized empty Git repository in /home/pony/hands-on-django/.git/
 
-Commit all files except the .idea and *.pyc which should go in the .gitignore
+
+Commit all files except the .idea and *.pyc which should go in the .gitignore.

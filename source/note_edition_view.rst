@@ -1,5 +1,5 @@
 Let's implement a note edition view
-==================================
+===================================
 
 Let's implement a note edition view. Again, you should use a class based view.
 User should only be able to edit the note title and content. Let's say the creation date and the owner cannot be edited.

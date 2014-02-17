@@ -1,5 +1,5 @@
 Let's implement views to add and delete notes
-=======================================
+=============================================
 
 Here is how you can implement the view to add a note. It's a little bit more complex than the edit view because you need to set the note owner.
 Let's pass the request's user to a NoteCreationForm:

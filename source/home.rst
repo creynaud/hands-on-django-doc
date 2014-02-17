@@ -147,6 +147,7 @@ Try to call 'print response' or 'response.showbrowser()'.
 Try to run the tests from the command line:
 
 .. code-block:: bash
+
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py test
     Creating test database for alias 'default'...
     ..
