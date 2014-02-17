@@ -25,6 +25,7 @@ Contents:
    add_delete_notes_views
    deploy_to_heroku
    secure_app
+   django_rest_framework
    what_to_do_next
    ubuntu_vm
 
