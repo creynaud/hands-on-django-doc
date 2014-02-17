@@ -178,6 +178,9 @@ The following requirements should go in a requirements.txt file at the root of y
     static==1.0.2
     wsgiref==0.1.2
 
+Always put *all* your project requirements (even dependencies of requirements) in this file. Also always specify an exact version.
+You can have some bad surprises when checking out your project on another machine and some version gets updated silently.
+
 The following requirements should go in a requirements-dev.txt file:
 
 .. code-block:: python
@@ -197,6 +200,12 @@ Note: if you checkout the project on another machine, you can install all the re
 .. code-block:: bash
 
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install -r requirements-dev.txt
+
+Finally you should tell Heroku which version of python to use via a runtime.txt file at the root of your project:
+
+.. code-block:: python
+
+    python-2.7.5
 
 Prepare the notes web app on Heroku
 -----------------------------------

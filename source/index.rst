@@ -24,6 +24,7 @@ Contents:
    more_templates_refactoring
    add_delete_notes_views
    deploy_to_heroku
+   secure_app
    what_to_do_next
    ubuntu_vm
 
