@@ -28,6 +28,7 @@ Have a look at http://127.0.0.1:8000/, you should see the Welcome! message.
 Ok, cool, but this is not an html page. Let's create an html file for this home page.
 
 Create a file named index.html. It should reside in notes/templates/notes/ under your project root directory, so create the intermediate folders too.
+The notes folder under templates is used to provide some kind of namespace for the templates, to avoid conflicts on the template file names.
 
 .. code-block:: html
 
@@ -45,16 +46,17 @@ Create a file named index.html. It should reside in notes/templates/notes/ under
 Let's make our home view render this template instead of our 'Welcome!' string, so let's modify our home view function.
 
 .. code-block:: python
+    :emphasize-lines: 2,3,7,8,9
 
-    from django.http.response import HttpResponse
-    from django.template import loader
-    from django.template.context import RequestContext
+     from django.http.response import HttpResponse
+    +from django.template import loader
+    +from django.template.context import RequestContext
 
 
-    def home(request):
-        template = loader.get_template('notes/index.html')
-        context = RequestContext(request, {})
-        return HttpResponse(template.render(context))
+     def home(request):
+    +    template = loader.get_template('notes/index.html')
+    +    context = RequestContext(request, {})
+    +    return HttpResponse(template.render(context))
 
 Have a look at http://127.0.0.1:8000/, you should see a TemplateDoesNotExist stack trace because the html template file cannot be found.
 
@@ -72,21 +74,23 @@ So far we only rendered a static html page. We don't need Django for that ;). So
 Let's add a date in the context used to render the template:
 
 .. code-block:: python
+    :emphasize-lines: 4,9
 
-    from django.http.response import HttpResponse
-    from django.template import loader
-    from django.template.context import RequestContext
-    from django.utils import timezone
+     from django.http.response import HttpResponse
+     from django.template import loader
+     from django.template.context import RequestContext
+    +from django.utils import timezone
 
 
-    def home(request):
-        template = loader.get_template('notes/index.html')
-        context = RequestContext(request, {'date': timezone.now()})
-        return HttpResponse(template.render(context))
+     def home(request):
+         template = loader.get_template('notes/index.html')
+    +    context = RequestContext(request, {'date': timezone.now()})
+         return HttpResponse(template.render(context))
 
 And let's modify the template too:
 
 .. code-block:: html
+    :emphasize-lines: 7,11
 
     <!DOCTYPE html>
     <html>

@@ -14,12 +14,13 @@ Creating the notes app
 
 .. code-block:: bash
 
-    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ django-admin.py startapp notesapp
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py startapp notesapp
 
 The notesapp is a python package, which contains 3 files:
-* models.py: contains the definition of the note entities. These will be mapped to the database via Django ORM.
-* admin.py: contains the registration of the model entities so they can show up in the admin.
-* views.py: contains the app views (e.g notes detail view, notes edition view, notes list view...)
+
+* models.py: will contain the definition of the note entities. These will be mapped to the database via Django ORM.
+* admin.py: will contain the registration of the model entities so they can show up in the admin.
+* views.py: will contain the app views (e.g notes detail view, notes edition view, notes list view...)
 Also create a urls.py file inside notesapp/. It can be left empty so far.
 
 Plugging the notes app in the project
@@ -60,8 +61,10 @@ This way the urls from the notes app will reside under http://127.0.0.1:8000/not
 Implementing the notes view
 ---------------------------
 
+The notes view should display all the note titles.
+
 So far we just want to render a static template when someone accesses http://127.0.0.1:8000/notes/.
-The templates should go in a notesapp/templates/notesapp/my_notes.html.
+The template should go in a notesapp/templates/notesapp/notes.html. Again, the notesapp folder under templates allows to have some namespacing for the template files.
 
 Just follow the same steps as for the home view, except that now you should only modify files inside notesapp/.
 Verify that the new view shows up in your browser.
@@ -84,8 +87,7 @@ Now it is time to add a model for the notes. Add the following code in notesapp/
         creation_date = models.DateTimeField(default=timezone.now)
         owner = models.ForeignKey(User)
 
-Have a look at the Django documentation for model fields to understand what this Note model does:
-https://docs.djangoproject.com/en/1.6/topics/db/models/.
+You can have a look at the Django documentation for model fields if you want more details on the field types: https://docs.djangoproject.com/en/1.6/ref/models/fields/.
 
 In order to use this model, we need to create the corresponding tables in our database.
 
@@ -99,14 +101,14 @@ In order to use this model, we need to create the corresponding tables in our da
     Installed 0 object(s) from 0 fixture(s)
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
 
-Now let's add the actual current user notes in the 'my notes' view.
+Now let's add the actual current user notes in the 'notes' view.
 
 .. code-block:: python
+    :emphasize-lines: 1
 
-    +    context = RequestContext(request, {'notes': Note.objects.filter(owner=request.user)})
+    +    context = RequestContext(request, {'notes': Note.objects.all()})
 
-The Note.objects.filter(owner=request.user) is a call to the Django ORM and retrieves all the notes that belong to request.user.
-There is a lot to say about how to make queries with Django ORM: https://docs.djangoproject.com/en/1.6/topics/db/queries/
+The Note.objects.all() is a call to the Django ORM (https://docs.djangoproject.com/en/1.6/topics/db/queries/) and retrieves all the notes.
 
 We also need to update the template to actually show the notes:
 
@@ -115,7 +117,7 @@ We also need to update the template to actually show the notes:
     <!DOCTYPE html>
     <html>
     <head>
-        <title>My Notes</title>
+        <title>Notes</title>
     </head>
     <body>
     <ul>
@@ -141,4 +143,6 @@ Testing
 -------
 
 Let's write a test for this new view. Take the previous tests as example.
+
+Don’t forget to commit your changes before going to the next step.
 

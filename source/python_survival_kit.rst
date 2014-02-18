@@ -1,14 +1,13 @@
 Python Survival Kit
 ===================
 
-Python is a dynamically typed language. TODO see what is said in wikipedia.
-TODO what is the difference between a tuple and a list
-TODO add an if else in the code example
+Python is a dynamically typed language. Indentation determines the grouping of statements.
+
+Copy the following code into a complex.py file:
 
 .. literalinclude:: complex.py
 
-
-Copy the previous code into a complex.py file, then launch the python interpreter in the directory containing the complex.py file:
+Launch the python interpreter in the directory containing the complex.py file:
 
 .. code-block:: bash
 

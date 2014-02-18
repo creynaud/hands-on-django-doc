@@ -46,3 +46,6 @@ Create a new notesapp/forms.py file containing the new form class:
 Don't forget to write some tests for the new note creation view. You can take the note edition view tests as an example.
 
 Also add a view to delete notes, with tests too.
+
+Don’t forget to commit your changes before going to the next step.
+

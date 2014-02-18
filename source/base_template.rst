@@ -50,3 +50,5 @@ Now let's refactor our views to extend this base template. Here is the new versi
 Now you can update all the other templates in notes and notesapp to make them extend base.html.
 When relevant, also add links between the pages. For example, the notes list should link to note detail views.
 You can have a look at the Django documentation for templates https://docs.djangoproject.com/en/dev/topics/templates/, and especially the "Template inheritance" paragraph.
+
+Don’t forget to commit your changes before going to the next step.

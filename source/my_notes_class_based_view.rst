@@ -35,3 +35,5 @@ You can login/logout via the admin (http://127.0.0.1:8000/admin/) to see what ha
 What happens when you access http://127.0.0.1:8000/notes/ and you are not logged in (hint: this will be the subject of the next step of this workshop)?
 
 Don't forget to modify the tests accordingly.
+
+Also commit your changes before going to the next step.

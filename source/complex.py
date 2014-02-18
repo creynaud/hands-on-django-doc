@@ -10,10 +10,15 @@ dictionary = {'key': 'value'}
 dictionary['another_key'] = 'another_value'
 
 
-def some_function(notes):
+def print_list(notes):
     for note in notes:
         print note
 
+def parity(n):
+    if n % 2 == 0:
+        return "even"
+    else:
+        return "odd"
 
 class Complex(object):
     real = 0.0

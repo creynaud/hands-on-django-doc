@@ -36,3 +36,5 @@ Also add the following code in your project's settings.py
         )
 
 Refresh http://127.0.0.1:8000/, you should now see the debug toolbar on the right hand side. Click on templates, SQL etc too see which debug information it can provide.
+
+Don’t forget to commit your changes before going to the next step.

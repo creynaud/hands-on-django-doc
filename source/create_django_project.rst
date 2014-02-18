@@ -7,6 +7,7 @@ Create the Notes Django project
     pony@Pony-VirtualBox:~$ cd hands-on-django
 
 Creating a virtualenv
+---------------------
 
 Create a virtualenv for the new project. This is were all the project dependencies will reside, without polluting or conflicting with the system libraries.
 
@@ -82,6 +83,9 @@ Try to run the project, either in Pycharm or via the command line:
 
 Open http://127.0.0.1:8000/ in Firefox or Chrome. You should see a page saying "It worked!".
 
+The Django development server automatically reloads Python code for each request as needed. You don’t need to restart the server for code changes to take effect.
+However, some actions like adding files or compiling translation files don’t trigger a restart, so you’ll have to restart the server in these cases.
+
 Running the admin and syncing the database
 ------------------------------------------
 
@@ -136,4 +140,4 @@ Before going to the next step, save your work in git.
     Initialized empty Git repository in /home/pony/hands-on-django/.git/
 
 
-Commit all files except the .idea and *.pyc which should go in the .gitignore.
+Commit all files except the .idea, *.pyc and db.sqlite3 which should go in the .gitignore.

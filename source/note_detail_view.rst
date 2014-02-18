@@ -89,4 +89,4 @@ by:
 
 You can even create a Note without specifying the owner, since a user will be lazily created.
 
-
+Don’t forget to commit your changes before going to the next step.

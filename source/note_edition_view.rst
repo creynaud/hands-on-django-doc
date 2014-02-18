@@ -36,3 +36,5 @@ So it is a good practice to always retrieve a form via its unique id.
         response = form.submit().follow()
         self.assertContains(response, new_title)
         self.assertContains(response, new_content)
+
+Don’t forget to commit your changes before going to the next step.

@@ -186,3 +186,5 @@ Now the note edition template will look like this:
     {% endblock %}
 
 Finally modify the last templates: my_notes.html and note_detail.html. Let's just display the 1st note detail on the right side in the notes view (we don't want to show the notes list twice).
+
+Don’t forget to commit your changes before going to the next step.
