@@ -1,7 +1,7 @@
 Let's implement a note detail view
 ==================================
 
-Let's implement a note detail view. You should use a class based view (like for the 'my notes' view).
+Let's implement a note detail view. You should use a class based view: DetailView, from django.views.generic.detail (https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-display/).
 
 The view path should be http://127.0.0.1:8000/notes/1/ for a note with id=1.
 Here is the regular expression that you will use in notesapp/urls.py:

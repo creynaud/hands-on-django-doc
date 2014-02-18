@@ -7,6 +7,7 @@ Let's pass the request's user to a NoteCreationForm:
 .. code-block:: python
 
     from django.shortcuts import redirect
+    from django.views.generic.edit import DeleteView, CreateView
 
     from .forms import NoteCreationForm
 

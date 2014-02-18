@@ -1,7 +1,9 @@
 Let's implement a note edition view
 ===================================
 
-Let's implement a note edition view. Again, you should use a class based view.
+Let's implement a note edition view. Again, you should use a class based view: UpdateView, from django.views.generic.edit (https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView).
+Don't forget to add an url to route to the view.
+
 User should only be able to edit the note title and content. Let's say the creation date and the owner cannot be edited.
 
 You will need to use an html form this time:
