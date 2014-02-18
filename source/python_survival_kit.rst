@@ -28,7 +28,7 @@ Launch the python interpreter in the directory containing the complex.py file:
     {'another_key': 'another_value', 'key': 'value'}
     >>> print complex.dictionary['key']
     value
-    >>> complex.some_function(["Test", "String"])
+    >>> complex.print_list(["Test", "String"])
     Test
     String
     >>>
