@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Let’s implement a 1st view: the home page &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Notes App" href="notesapp.html" />
+    <link rel="prev" title="Create the Notes Django project" href="create_django_project.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="notesapp.html" title="Notes App"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="create_django_project.html" title="Create the Notes Django project"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="let-s-implement-a-1st-view-the-home-page">
+<h1>Let&#8217;s implement a 1st view: the home page<a class="headerlink" href="#let-s-implement-a-1st-view-the-home-page" title="Permalink to this headline">¶</a></h1>
+<p>To implement the home view, we will need to write a bit of html and a bit of python code.
+So far we just want the home view to display a custom welcome message.</p>
+<div class="section" id="implementing-the-view">
+<h2>Implementing the view<a class="headerlink" href="#implementing-the-view" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s uncomment the following line in notes/urls.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># url(r&#39;^$&#39;, &#39;notes.views.home&#39;, name=&#39;home&#39;),</span>
+</pre></div>
+</div>
+<p>Then let&#8217;s create a notes/views.py file, and add a view function for our home page:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+
+
+<span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="s">&#39;Welcome!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Have a look at <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>, you should see the Welcome! message.</p>
+<p>Ok, cool, but this is not an html page. Let&#8217;s create an html file for this home page.</p>
+<p>Create a file named index.html. It should reside in notes/templates/notes/ under your project root directory, so create the intermediate folders too.
+The notes folder under templates is used to provide some kind of namespace for the templates, to avoid conflicts on the template file names.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Welcome<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+    <span class="nt">&lt;h1&gt;</span>Welcome!<span class="nt">&lt;/h1&gt;</span>
+    <span class="nt">&lt;p&gt;</span>This is the Notes App. Django powered!<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>Let&#8217;s make our home view render this template instead of our &#8216;Welcome!&#8217; string, so let&#8217;s modify our home view function.</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+<span class="hll"><span class="o">+</span><span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span>
+</span><span class="hll"><span class="o">+</span><span class="kn">from</span> <span class="nn">django.template.context</span> <span class="kn">import</span> <span class="n">RequestContext</span>
+</span>
+
+ <span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="hll"><span class="o">+</span>    <span class="n">template</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;notes/index.html&#39;</span><span class="p">)</span>
+</span><span class="hll"><span class="o">+</span>    <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{})</span>
+</span><span class="hll"><span class="o">+</span>    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
+</span></pre></div>
+</div>
+<p>Have a look at <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>, you should see a TemplateDoesNotExist stack trace because the html template file cannot be found.</p>
+<p>We need to tell Django were to look for our html template, so add the following lines at the end of the settings.py file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">TEMPLATE_DIRS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">&#39;notes/templates&#39;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Refresh <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>. Your home page should render correctly now.</p>
+<p>So far we only rendered a static html page. We don&#8217;t need Django for that ;). So let&#8217;s modify our view again to see how to show some dynamic content.
+Let&#8217;s add a date in the context used to render the template:</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="kn">from</span> <span class="nn">django.http.response</span> <span class="kn">import</span> <span class="n">HttpResponse</span>
+ <span class="kn">from</span> <span class="nn">django.template</span> <span class="kn">import</span> <span class="n">loader</span>
+ <span class="kn">from</span> <span class="nn">django.template.context</span> <span class="kn">import</span> <span class="n">RequestContext</span>
+<span class="hll"><span class="o">+</span><span class="kn">from</span> <span class="nn">django.utils</span> <span class="kn">import</span> <span class="n">timezone</span>
+</span>
+
+ <span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+     <span class="n">template</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="s">&#39;notes/index.html&#39;</span><span class="p">)</span>
+<span class="hll"><span class="o">+</span>    <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;date&#39;</span><span class="p">:</span> <span class="n">timezone</span><span class="o">.</span><span class="n">now</span><span class="p">()})</span>
+</span>     <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="n">template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">context</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>And let&#8217;s modify the template too:</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Notes App<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="hll"><span class="nt">&lt;h1&gt;</span>Welcome{% if user.is_authenticated %} {{ user.email }}{% endif %}!<span class="nt">&lt;/h1&gt;</span>
+</span>
+<span class="nt">&lt;p&gt;</span>This is the Notes App. Django powered!<span class="nt">&lt;/p&gt;</span>
+
+<span class="hll"><span class="nt">&lt;p&gt;</span>{{ date }}<span class="nt">&lt;/p&gt;</span>
+</span><span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>Refresh <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a> and have a look at your dynamic home page.</p>
+</div>
+<div class="section" id="testing">
+<h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
+<p>Now is a good time to start writing tests.</p>
+<p>Create a python package named &#8216;tests&#8217; at the root of your project, and a tests_home.py file in it.
+A python package is just a folder containing an empty __init__.py file, so create a &#8216;tests&#8217; folder and add an empty __init__.py file in it.</p>
+<p>Also add a tests_home.py file inside the tests package.</p>
+<p>We are going to use django-webtest (<a class="reference external" href="https://pypi.python.org/pypi/django-webtest">https://pypi.python.org/pypi/django-webtest</a>) to write our tests, not the vanilla Django tests.
+So let&#8217;s install django-webtest in our virtualenv:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>pip install django-webtest webtest
+</pre></div>
+</div>
+<p>Copy/paste the following test code and for now just try to understand what the tests do. For example find what &#8216;reverse&#8217; does in the Django doc.
+Try to call &#8216;print response&#8217; or &#8216;response.showbrowser()&#8217;.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django_webtest</span> <span class="kn">import</span> <span class="n">WebTest</span>
+
+
+<span class="k">class</span> <span class="nc">HomeTests</span><span class="p">(</span><span class="n">WebTest</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test_home_not_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&#39;home&#39;</span><span class="p">)</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s">&#39;Welcome!&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">test_home_authenticated</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">reverse</span><span class="p">(</span><span class="s">&#39;home&#39;</span><span class="p">)</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;sheldon&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">&#39;sheldon@cooper.net&#39;</span><span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertContains</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s">&#39;Welcome {0}!&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Try to run the tests from the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py test
+Creating test database for alias &#39;default&#39;...
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.040s
+
+OK
+Destroying test database for alias &#39;default&#39;...
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+<p>Also create a run configuration for the tests in Pycharm. Make sure to add DJANGO_SETTINGS_MODULE with notes.settings as value in the tests configuration environment variables.</p>
+<p>Don&#8217;t forget to commit your changes before going to the next step.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Let&#8217;s implement a 1st view: the home page</a><ul>
+<li><a class="reference internal" href="#implementing-the-view">Implementing the view</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="create_django_project.html"
+                        title="previous chapter">Create the Notes Django project</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="notesapp.html"
+                        title="next chapter">Notes App</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/home.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="notesapp.html" title="Notes App"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="create_django_project.html" title="Create the Notes Django project"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Let’s implement a note detail view &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Let’s implement a note edition view" href="note_edition_view.html" />
+    <link rel="prev" title="Authentication with django allauth" href="django_allauth.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="note_edition_view.html" title="Let’s implement a note edition view"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="django_allauth.html" title="Authentication with django allauth"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="let-s-implement-a-note-detail-view">
+<h1>Let&#8217;s implement a note detail view<a class="headerlink" href="#let-s-implement-a-note-detail-view" title="Permalink to this headline">¶</a></h1>
+<p>Let&#8217;s implement a note detail view. You should use a class based view: DetailView, from django.views.generic.detail (<a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-display/">https://docs.djangoproject.com/en/dev/ref/class-based-views/generic-display/</a>).</p>
+<p>The view path should be <a class="reference external" href="http://127.0.0.1:8000/notes/1/">http://127.0.0.1:8000/notes/1/</a> for a note with id=1.
+Here is the regular expression that you will use in notesapp/urls.py:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">url</span><span class="p">(</span><span class="s">r&#39;^(?P&lt;pk&gt;\d+)/$&#39;</span><span class="p">,</span> <span class="n">views</span><span class="o">.</span><span class="n">note_detail</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;note_detail&#39;</span><span class="p">),</span>
+</pre></div>
+</div>
+<p>Let&#8217;s add tests for this view too.</p>
+<p>When you are done with the tests, you may notice that you repeat User and Note objects creation quite a lot.
+Let&#8217;s improve this and refactor the tests with Factory Boy (<a class="reference external" href="https://factoryboy.readthedocs.org/en/latest/introduction.html">https://factoryboy.readthedocs.org/en/latest/introduction.html</a>).</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>pip install factory_boy
+</pre></div>
+</div>
+<p>Factory Boy let&#8217;s you instantiate your models via factories, without having to specify all the instance values.</p>
+<p>Create a tests/factories.py file, and paste the following content:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.auth.models</span> <span class="kn">import</span> <span class="n">User</span>
+
+<span class="kn">from</span> <span class="nn">factory.declarations</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">SubFactory</span>
+<span class="kn">from</span> <span class="nn">factory.django</span> <span class="kn">import</span> <span class="n">DjangoModelFactory</span>
+<span class="kn">from</span> <span class="nn">factory.helpers</span> <span class="kn">import</span> <span class="n">lazy_attribute</span>
+
+<span class="kn">from</span> <span class="nn">notesapp.models</span> <span class="kn">import</span> <span class="n">Note</span>
+
+
+<span class="k">class</span> <span class="nc">UserFactory</span><span class="p">(</span><span class="n">DjangoModelFactory</span><span class="p">):</span>
+    <span class="n">FACTORY_FOR</span> <span class="o">=</span> <span class="n">User</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">Sequence</span><span class="p">(</span><span class="k">lambda</span> <span class="n">n</span><span class="p">:</span> <span class="s">&#39;some_email{0}@acme.com&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+
+    <span class="nd">@lazy_attribute</span>
+    <span class="k">def</span> <span class="nf">email</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+
+    <span class="nd">@lazy_attribute</span>
+    <span class="k">def</span> <span class="nf">password</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;123&quot;</span>
+
+
+<span class="k">class</span> <span class="nc">NoteFactory</span><span class="p">(</span><span class="n">DjangoModelFactory</span><span class="p">):</span>
+    <span class="n">FACTORY_FOR</span> <span class="o">=</span> <span class="n">Note</span>
+    <span class="n">owner</span> <span class="o">=</span> <span class="n">SubFactory</span><span class="p">(</span><span class="n">UserFactory</span><span class="p">)</span>
+
+    <span class="nd">@lazy_attribute</span>
+    <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;Some Title&quot;</span>
+
+    <span class="nd">@lazy_attribute</span>
+    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;Some content.&quot;</span>
+</pre></div>
+</div>
+<p>Now you can refactor the tests and simplify the User and Note instantiations when the values of username, email, etc do not really matter.</p>
+<p>For example you can replace:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;guybrush&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">&#39;guybrush@meleeisland.com&#39;</span><span class="p">)</span>
+<span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">note</span> <span class="o">=</span> <span class="n">Note</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">&#39;Title&#39;</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>
+<span class="n">note</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">elaine</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="s">&#39;elaine&#39;</span><span class="p">,</span> <span class="n">email</span><span class="o">=</span><span class="s">&#39;elaine@meleeisland.com&#39;</span><span class="p">)</span>
+<span class="n">elaine</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+<span class="n">elaine_note</span> <span class="o">=</span> <span class="n">Note</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">&#39;Elaine Note Title&#39;</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">elaine</span><span class="p">)</span>
+<span class="n">elaine_note</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>by:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">guybrush</span> <span class="o">=</span> <span class="n">UserFactory</span><span class="p">()</span>
+<span class="n">guybrush_note</span> <span class="o">=</span> <span class="n">NoteFactory</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">&#39;Title Guybrush&#39;</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">guybrush</span><span class="p">)</span>
+
+<span class="n">elaine</span> <span class="o">=</span> <span class="n">UserFactory</span><span class="p">()</span>
+<span class="n">elaine_note</span> <span class="o">=</span> <span class="n">NoteFactory</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s">&#39;Title Elaine&#39;</span><span class="p">,</span> <span class="n">owner</span><span class="o">=</span><span class="n">elaine</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>You can even create a Note without specifying the owner, since a user will be lazily created.</p>
+<p>Don’t forget to commit your changes before going to the next step.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="django_allauth.html"
+                        title="previous chapter">Authentication with django allauth</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="note_edition_view.html"
+                        title="next chapter">Let&#8217;s implement a note edition view</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/note_detail_view.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="note_edition_view.html" title="Let’s implement a note edition view"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="django_allauth.html" title="Authentication with django allauth"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

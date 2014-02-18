@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Templates refactoring: base template and links between pages &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="More templates refactoring" href="more_templates_refactoring.html" />
+    <link rel="prev" title="Let’s implement a note edition view" href="note_edition_view.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="more_templates_refactoring.html" title="More templates refactoring"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="note_edition_view.html" title="Let’s implement a note edition view"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="templates-refactoring-base-template-and-links-between-pages">
+<h1>Templates refactoring: base template and links between pages<a class="headerlink" href="#templates-refactoring-base-template-and-links-between-pages" title="Permalink to this headline">¶</a></h1>
+<p>It&#8217;s very likely that your html templates will have some common parts. For example, pages on a website usually have the same header and footer.
+Let&#8217;s start refactoring our templates to use a common template as the base.</p>
+<p>Let&#8217;s add a base.html template in notes/templates. Naming the root template base.html is a convention.</p>
+<div class="highlight-html"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>{% block head_title %}Notes{% endblock %}<span class="nt">&lt;/title&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;{% url &#39;home&#39; %}&quot;</span><span class="nt">&gt;</span>Home<span class="nt">&lt;/a&gt;</span>
+{% if user.is_authenticated %}
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;{% url &#39;my_notes&#39; %}&quot;</span><span class="nt">&gt;</span>My Notes<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;{% url &#39;account_logout&#39; %}&quot;</span><span class="nt">&gt;</span>Logout<span class="nt">&lt;/a&gt;</span>
+{% else %}
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;{% url &#39;account_login&#39; %}&quot;</span><span class="nt">&gt;</span>Login<span class="nt">&lt;/a&gt;</span>
+{% endif %}
+
+{% block content %}{% endblock %}
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div>
+<p>Unlike the other templates, we don&#8217;t put base.html in notes/templates/notes or notesapp/templates/notesapp, because we want other apps templates to inherit from base.html.
+Have a look at the templates from django-allauth. You will see that they inherit from a base.html template.</p>
+<p>Also note that the new base.html template contains links to other pages: my notes, login or logout page.</p>
+<p>Now let&#8217;s refactor our views to extend this base template. Here is the new version of notes/index.html:</p>
+<div class="highlight-html"><div class="highlight"><pre>{% extends &quot;base.html&quot; %}
+
+{% block head_title %}Notes{% endblock %}
+
+{% block content %}
+    <span class="nt">&lt;h1&gt;</span>Welcome{% if user.is_authenticated %} {{ user.email }}{% endif %}!<span class="nt">&lt;/h1&gt;</span>
+
+    <span class="nt">&lt;p&gt;</span>This is the Notes App. Django powered!<span class="nt">&lt;/p&gt;</span>
+
+    <span class="nt">&lt;p&gt;</span>{{ date }}<span class="nt">&lt;/p&gt;</span>
+{% endblock %}
+</pre></div>
+</div>
+<p>Now you can update all the other templates in notes and notesapp to make them extend base.html.
+When relevant, also add links between the pages. For example, the notes list should link to note detail views.
+You can have a look at the Django documentation for templates <a class="reference external" href="https://docs.djangoproject.com/en/dev/topics/templates/">https://docs.djangoproject.com/en/dev/topics/templates/</a>, and especially the &#8220;Template inheritance&#8221; paragraph.</p>
+<p>Don’t forget to commit your changes before going to the next step.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="note_edition_view.html"
+                        title="previous chapter">Let&#8217;s implement a note edition view</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="more_templates_refactoring.html"
+                        title="next chapter">More templates refactoring</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/base_template.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="more_templates_refactoring.html" title="More templates refactoring"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="note_edition_view.html" title="Let’s implement a note edition view"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

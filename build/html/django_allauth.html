@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Authentication with django allauth &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Let’s implement a note detail view" href="note_detail_view.html" />
+    <link rel="prev" title="My Notes class based view" href="my_notes_class_based_view.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="note_detail_view.html" title="Let’s implement a note detail view"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="my_notes_class_based_view.html" title="My Notes class based view"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="authentication-with-django-allauth">
+<h1>Authentication with django allauth<a class="headerlink" href="#authentication-with-django-allauth" title="Permalink to this headline">¶</a></h1>
+<p>Django allauth let&#8217;s you implement local or social authentication for your Django website.
+It provides views that will typically reside under /accounts, e.g /accounts/login/, /accounts/logout. Follow the installation guide: <a class="reference external" href="http://django-allauth.readthedocs.org/en/latest/">http://django-allauth.readthedocs.org/en/latest/</a>.</p>
+<p>For the settings which are not yet in your settings.py, look at the default values in Django&#8217;s settings reference documentation: <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/settings/">https://docs.djangoproject.com/en/dev/ref/settings/</a>.</p>
+<p>You will also need an email backend, so add the following setting too:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">EMAIL_BACKEND</span> <span class="o">=</span> <span class="s">&#39;django.core.mail.backends.console.EmailBackend&#39;</span>
+</pre></div>
+</div>
+<p>This will log the allauth emails (for email verification, reset password...) to the console.</p>
+<p>It would be nice to:</p>
+<ul class="simple">
+<li>be redirected to the &#8216;my notes&#8217; page after logging in (instead of /accounts/profile/)</li>
+<li>require the user to enter an email on signup</li>
+<li>make email verification mandatory</li>
+</ul>
+<p>You can also add a tool that can be helpful when debugging: the Django Debug Toolbar.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>pip install django-debug-toolbar
+</pre></div>
+</div>
+<p>Also add the following code in your project&#8217;s settings.py</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">DEBUG</span><span class="p">:</span>
+    <span class="n">INSTALLED_APPS</span> <span class="o">+=</span> <span class="p">(</span>
+        <span class="s">&#39;debug_toolbar&#39;</span><span class="p">,</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>Refresh <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a>, you should now see the debug toolbar on the right hand side. Click on templates or SQL for example to see which debug information it can provide.</p>
+<p>Don’t forget to commit your changes before going to the next step.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="my_notes_class_based_view.html"
+                        title="previous chapter">My Notes class based view</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="note_detail_view.html"
+                        title="next chapter">Let&#8217;s implement a note detail view</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/django_allauth.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="note_detail_view.html" title="Let’s implement a note detail view"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="my_notes_class_based_view.html" title="My Notes class based view"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

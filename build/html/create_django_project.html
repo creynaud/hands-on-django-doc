@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Create the Notes Django project &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Let’s implement a 1st view: the home page" href="home.html" />
+    <link rel="prev" title="Python Survival Kit" href="python_survival_kit.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="home.html" title="Let’s implement a 1st view: the home page"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="python_survival_kit.html" title="Python Survival Kit"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="create-the-notes-django-project">
+<h1>Create the Notes Django project<a class="headerlink" href="#create-the-notes-django-project" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-bash"><div class="highlight"><pre>pony@Pony-VirtualBox:~<span class="nv">$ </span>mkdir hands-on-django
+pony@Pony-VirtualBox:~<span class="nv">$ </span><span class="nb">cd </span>hands-on-django
+</pre></div>
+</div>
+<div class="section" id="creating-a-virtualenv">
+<h2>Creating a virtualenv<a class="headerlink" href="#creating-a-virtualenv" title="Permalink to this headline">¶</a></h2>
+<p>Create a virtualenv for the new project. This is were all the project dependencies will reside, without polluting or conflicting with the system libraries.</p>
+<div class="highlight-bash"><div class="highlight"><pre>pony@Pony-VirtualBox:~/hands-on-django$ mkvirtualenv --python=python2.7 hands-on-django
+Running virtualenv with interpreter /usr/bin/python2.7
+New python executable in hands-on-django/bin/python2.7
+Also creating executable in hands-on-django/bin/python
+Installing Setuptools..............................................................................................................................................................................................................................done.
+Installing Pip.....................................................................................................................................................................................................................................................................................................................................done.
+virtualenvwrapper.user_scripts creating /home/pony/.virtualenvs/hands-on-django/bin/predeactivate
+virtualenvwrapper.user_scripts creating /home/pony/.virtualenvs/hands-on-django/bin/postdeactivate
+virtualenvwrapper.user_scripts creating /home/pony/.virtualenvs/hands-on-django/bin/preactivate
+virtualenvwrapper.user_scripts creating /home/pony/.virtualenvs/hands-on-django/bin/postactivate
+virtualenvwrapper.user_scripts creating /home/pony/.virtualenvs/hands-on-django/bin/get_env_details
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+<p>Install Django:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ pip install Django
+Downloading/unpacking Django
+  Downloading Django-1.6.2.tar.gz (6.6MB): 6.6MB downloaded
+  Running setup.py egg_info for package Django
+...
+Successfully installed Django
+Cleaning up...
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+</div>
+<div class="section" id="creating-the-django-project">
+<h2>Creating the Django project<a class="headerlink" href="#creating-the-django-project" title="Permalink to this headline">¶</a></h2>
+<p>Create the notes Django project by calling django-admin.py:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>django-admin.py <span class="nb">help</span>
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>django-admin.py startproject notes .
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>ls -lR
+.:
+total 8
+-rw-r--r-- 1 pony pony  248 févr. 13 14:30 manage.py
+drwxr-xr-x 2 pony pony 4096 févr. 13 14:30 notes
+
+./notes:
+total 12
+-rw-r--r-- 1 pony pony    0 févr. 13 14:30 __init__.py
+-rw-r--r-- 1 pony pony 1969 févr. 13 14:30 settings.py
+-rw-r--r-- 1 pony pony  296 févr. 13 14:30 urls.py
+-rw-r--r-- 1 pony pony  385 févr. 13 14:30 wsgi.py
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django
+</pre></div>
+</div>
+<p>Open the project in Pycharm: File-&gt;Open... Then select the path to the hands-on-django directory.
+Open the project settings, File-&gt;Settings... and search &#8220;python intrepreters&#8221;. Add the path to your &#8216;hands-on-django&#8217; virtualenv python, which should be /home/pony/virtualenvs/hands-on-django/bin/python.
+Finally accept to use this python interpreter for the current project.</p>
+<p>Pycharm will re-build its indexes.</p>
+<p>Try to run the project, either in Pycharm or via the command line:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>python manage.py runserver
+Validating models...
+
+0 errors found
+February 13, 2014 - 13:56:43
+Django version 1.6.2, using settings <span class="s1">&#39;notes.settings&#39;</span>
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+</pre></div>
+</div>
+<p>Open <a class="reference external" href="http://127.0.0.1:8000/">http://127.0.0.1:8000/</a> in Firefox or Chrome. You should see a page saying &#8220;It worked!&#8221;.</p>
+<p>The Django development server automatically reloads Python code for each request as needed. You don’t need to restart the server for code changes to take effect.
+However, some actions like adding files or compiling translation files don’t trigger a restart, so you’ll have to restart the server in these cases.</p>
+</div>
+<div class="section" id="running-the-admin-and-syncing-the-database">
+<h2>Running the admin and syncing the database<a class="headerlink" href="#running-the-admin-and-syncing-the-database" title="Permalink to this headline">¶</a></h2>
+<p>Go to <a class="reference external" href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a>. You don&#8217;t have an admin user yet, let&#8217;s create one.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>python manage.py createsuperuser
+Traceback <span class="o">(</span>most recent call last<span class="o">)</span>:
+  File <span class="s2">&quot;manage.py&quot;</span>, line 10, in &lt;module&gt;
+    execute_from_command_line<span class="o">(</span>sys.argv<span class="o">)</span>
+  ...
+django.db.utils.OperationalError: no such table: auth_user
+</pre></div>
+</div>
+<p>We get an error because the users table is not defined in our database yet.
+So let&#8217;s populate the database by calling &#8216;python manage.py syncdb&#8217;.
+This will also let you create an admin user.</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ python manage.py syncdb
+Creating tables ...
+Creating table django_admin_log
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_groups
+Creating table auth_user_user_permissions
+Creating table auth_user
+Creating table django_content_type
+Creating table django_session
+
+You just installed Django&#39;s auth system, which means you don&#39;t have any superusers defined.
+Would you like to create one now? (yes/no): yes
+Username (leave blank to use &#39;pony&#39;):
+Email address: pony@acme.com
+Password:
+Password (again):
+Superuser created successfully.
+Installing custom SQL ...
+Installing indexes ...
+Installed 0 object(s) from 0 fixture(s)
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+<p>Have a look at all the files that were created when starting the new Django project.</p>
+<p>Before going to the next step, save your work in git.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>git init
+Initialized empty Git repository in /home/pony/hands-on-django/.git/
+</pre></div>
+</div>
+<p>Commit all files except the .idea, <a href="#id1"><span class="problematic" id="id2">*</span></a>.pyc and db.sqlite3 which should go in the .gitignore.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Create the Notes Django project</a><ul>
+<li><a class="reference internal" href="#creating-a-virtualenv">Creating a virtualenv</a></li>
+<li><a class="reference internal" href="#creating-the-django-project">Creating the Django project</a></li>
+<li><a class="reference internal" href="#running-the-admin-and-syncing-the-database">Running the admin and syncing the database</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="python_survival_kit.html"
+                        title="previous chapter">Python Survival Kit</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="home.html"
+                        title="next chapter">Let&#8217;s implement a 1st view: the home page</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/create_django_project.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="home.html" title="Let’s implement a 1st view: the home page"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="python_survival_kit.html" title="Python Survival Kit"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

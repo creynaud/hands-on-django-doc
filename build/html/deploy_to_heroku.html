@@ -1,0 +1,435 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Deploying the notes web app &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Fixing some security issues" href="secure_app.html" />
+    <link rel="prev" title="Let’s implement views to add and delete notes" href="add_delete_notes_views.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="secure_app.html" title="Fixing some security issues"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="add_delete_notes_views.html" title="Let’s implement views to add and delete notes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="deploying-the-notes-web-app">
+<h1>Deploying the notes web app<a class="headerlink" href="#deploying-the-notes-web-app" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="how-is-this-going-to-work">
+<h2>How is this going to work?<a class="headerlink" href="#how-is-this-going-to-work" title="Permalink to this headline">¶</a></h2>
+<p>Here is how the notes web app will run on Heroku:</p>
+<ul class="simple">
+<li>We are going to push the web app git local repository to a remote heroku repository.</li>
+<li>After the push, Heroku will download our app requirements, build the app and create a &#8220;slug&#8221;. A &#8220;slug&#8221; is a snapshot of our app that can be easily deployed on a Heroku &#8220;dyno&#8221;. A Heroku &#8220;dyno&#8221; can be seen as a small Virtual Machine with an ephemeral file system. To scale the app up or down, one can add/remove &#8220;dynos&#8221;.</li>
+<li>An instance of the note app that runs on a &#8220;dyno&#8221; is stateless. Sessions are tracked in the database, not inside the &#8220;dyno&#8221; itself.</li>
+<li>The Postgresql database can be provided by Heroku via an add-on: <a class="reference external" href="https://addons.heroku.com/">https://addons.heroku.com/</a></li>
+<li>Heroku expects that the web app configuration is defined as environment variables. For example, when one adds a postgresql add-on to a Heroku app, a DATABASE_URL variable is added to the environment of the app.</li>
+<li>We will tell Heroku to run our app on gunicorn (<a class="reference external" href="http://gunicorn.org/">http://gunicorn.org/</a>), a python WSGI HTTP server, by creating a Procfile.</li>
+<li>Our app static files (e.g theme.css) will also be served by the &#8220;dynos&#8221;, thank to dj-static (<a class="reference external" href="https://github.com/kennethreitz/dj-static">https://github.com/kennethreitz/dj-static</a>). Note that another option could be to serve the static files via Amazon S3 (<a class="reference external" href="http://aws.amazon.com/en/s3/">http://aws.amazon.com/en/s3/</a>), but we won&#8217;t do it during this workshop for the sake of simplicity.</li>
+</ul>
+</div>
+<div class="section" id="some-documentation-pointers-to-get-started">
+<h2>Some documentation pointers to get started<a class="headerlink" href="#some-documentation-pointers-to-get-started" title="Permalink to this headline">¶</a></h2>
+<p>There is a comment in settings.py mentioning that the settings generated when starting a Django project are &#8216;Quick-start development settings - unsuitable for production&#8217;.
+The comment also points to <a class="reference external" href="https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/">https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/</a>.
+Looks like a good place to get started.</p>
+<p>See also this Heroku documentation about deploying a Django app on Heroku: <a class="reference external" href="https://devcenter.heroku.com/articles/getting-started-with-django">https://devcenter.heroku.com/articles/getting-started-with-django</a>.</p>
+</div>
+<div class="section" id="defining-the-notes-app-configuration-as-environment-variables">
+<h2>Defining the notes app configuration as environment variables<a class="headerlink" href="#defining-the-notes-app-configuration-as-environment-variables" title="Permalink to this headline">¶</a></h2>
+<p>As Heroku expects the configuration to be defined as environment variables, let&#8217;s define the following variables:</p>
+<ul class="simple">
+<li>DATABASE_URL</li>
+<li>DEBUG</li>
+<li>ALLOWED_HOSTS</li>
+<li>SECRET_KEY</li>
+<li>DJANGO_SETTINGS_MODULE</li>
+</ul>
+<p>We are going to modify our settings.py file to get its values from these environment variables (also install dj-database-url):</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="c"># Build paths inside the project like this: os.path.join(BASE_DIR, ...)</span>
+ <span class="kn">import</span> <span class="nn">os</span>
+<span class="o">+</span><span class="kn">import</span> <span class="nn">dj_database_url</span>
+
+ <span class="kn">from</span> <span class="nn">django.core.urlresolvers</span> <span class="kn">import</span> <span class="n">reverse_lazy</span>
+
+ <span class="n">BASE_DIR</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">__file__</span><span class="p">))</span>
+
+ <span class="c"># See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/</span>
+ <span class="c"># SECURITY WARNING: keep the secret key used in production secret!</span>
+<span class="o">-</span><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s">&#39;dummy&#39;</span>
+<span class="hll"><span class="o">+</span><span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;SECRET_KEY&#39;</span><span class="p">]</span>
+</span>
+ <span class="c"># SECURITY WARNING: don&#39;t run with debug turned on in production!</span>
+<span class="o">-</span><span class="n">DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="hll"><span class="o">+</span><span class="n">DEBUG</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;DEBUG&#39;</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
+</span>
+<span class="o">-</span><span class="n">TEMPLATE_DEBUG</span> <span class="o">=</span> <span class="bp">True</span>
+<span class="hll"><span class="o">+</span><span class="n">TEMPLATE_DEBUG</span> <span class="o">=</span> <span class="n">DEBUG</span>
+</span>
+<span class="o">-</span><span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="hll"><span class="o">+</span><span class="n">ALLOWED_HOSTS</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;ALLOWED_HOSTS&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+</span>
+ <span class="c"># Application definition</span>
+ <span class="c"># https://docs.djangoproject.com/en/1.6/ref/settings/#databases</span>
+
+ <span class="n">DATABASES</span> <span class="o">=</span> <span class="p">{</span>
+<span class="o">-</span>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span>
+<span class="o">-</span>        <span class="s">&#39;ENGINE&#39;</span><span class="p">:</span> <span class="s">&#39;django.db.backends.sqlite3&#39;</span><span class="p">,</span>
+<span class="o">-</span>        <span class="s">&#39;NAME&#39;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BASE_DIR</span><span class="p">,</span> <span class="s">&#39;db.sqlite3&#39;</span><span class="p">),</span>
+<span class="o">-</span>    <span class="p">}</span>
+<span class="hll"><span class="o">+</span>    <span class="s">&#39;default&#39;</span><span class="p">:</span> <span class="n">dj_database_url</span><span class="o">.</span><span class="n">config</span><span class="p">()</span>
+</span> <span class="p">}</span>
+</pre></div>
+</div>
+<p>Now if you try to launch the app for development, it should be broken unless you define the right environment variables:</p>
+<ul class="simple">
+<li>DATABASE_URL=&#8217;sqlite:////home/pony/hands-on-django/db.sqlite3&#8217;</li>
+<li>SECRET_KEY=&#8217;dummy&#8217;</li>
+<li>ALLOWED_HOSTS=&#8217;dummy&#8217;</li>
+<li>DJANGO_SETTINGS_MODULE=&#8217;notes.settings&#8217;</li>
+<li>DEBUG=&#8217;True&#8217;</li>
+</ul>
+<p>To run your project and tests in Pycharm, add these variables in the run configuration settings.</p>
+<p>If you run your project from the command line (which is quite likely if you use an integration server), you can use a tool called &#8216;envdir&#8217;.
+&#8216;envdir&#8217; is command line tool that accepts a folder containing files defining environment variable as parameter.</p>
+<p>For example, create an &#8216;env&#8217; folder at the root of the project. Define a DATABASE_URL file that just contains its value: sqlite:////home/pony/hands-on-django/db.sqlite3 as value.
+Do the same for the other environment variable. Now to run your project or your tests from the command line, just call:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>envdir env/ python manage.py runserver
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>envdir env/ python manage.py <span class="nb">test</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="telling-heroku-to-run-the-notes-app-with-gunicorn">
+<h2>Telling Heroku to run the notes app with gunicorn<a class="headerlink" href="#telling-heroku-to-run-the-notes-app-with-gunicorn" title="Permalink to this headline">¶</a></h2>
+<p>Create a Procfile at the root of the project. The Procfile content should be the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">web</span><span class="p">:</span> <span class="n">gunicorn</span> <span class="n">notes</span><span class="o">.</span><span class="n">wsgi</span>
+</pre></div>
+</div>
+<p>We need gunicorn, so let&#8217;s install it via pip.</p>
+</div>
+<div class="section" id="serving-static-files-via-heroku-and-dj-static">
+<h2>Serving static files via Heroku and dj-static<a class="headerlink" href="#serving-static-files-via-heroku-and-dj-static" title="Permalink to this headline">¶</a></h2>
+<p>We are going to serve our notes app static files (theme.css and all admin app static files - images, css, javascript files) via Heroku.
+This is possible thank to the dj-static package.</p>
+<p>We need to install dj-static and static for this purpose.</p>
+<p>We also need to change the notes.wsgi file to the following:</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="kn">import</span> <span class="nn">os</span>
+<span class="hll"><span class="o">+</span>
+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s">&quot;DJANGO_SETTINGS_MODULE&quot;</span><span class="p">,</span> <span class="s">&quot;notes.settings&quot;</span><span class="p">)</span>
+
+ <span class="kn">from</span> <span class="nn">django.core.wsgi</span> <span class="kn">import</span> <span class="n">get_wsgi_application</span>
+<span class="o">-</span><span class="n">application</span> <span class="o">=</span> <span class="n">get_wsgi_application</span><span class="p">()</span>
+<span class="hll"><span class="o">+</span><span class="kn">from</span> <span class="nn">dj_static</span> <span class="kn">import</span> <span class="n">Cling</span>
+</span><span class="hll"><span class="o">+</span><span class="n">application</span> <span class="o">=</span> <span class="n">Cling</span><span class="p">(</span><span class="n">get_wsgi_application</span><span class="p">())</span>
+</span></pre></div>
+</div>
+<p>Also let&#8217;s declare a static root in settings.py:</p>
+<div class="highlight-python"><div class="highlight"><pre> <span class="c"># Static files (CSS, JavaScript, Images)</span>
+ <span class="c"># https://docs.djangoproject.com/en/1.6/howto/static-files/</span>
+
+<span class="hll"><span class="o">+</span><span class="n">STATIC_ROOT</span> <span class="o">=</span> <span class="s">&#39;staticfiles&#39;</span>
+</span> <span class="n">STATIC_URL</span> <span class="o">=</span> <span class="s">&#39;/static/&#39;</span>
+</pre></div>
+</div>
+<p>The static root is the folder where all the project static files are going to be copied when calling &#8216;collectstatic&#8217;.
+See <a class="reference external" href="https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/">https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/</a> for the documentation of how collectstatic finds the static files.</p>
+</div>
+<div class="section" id="listing-the-requirements-of-the-project-for-deployment">
+<h2>Listing the requirements of the project for deployment<a class="headerlink" href="#listing-the-requirements-of-the-project-for-deployment" title="Permalink to this headline">¶</a></h2>
+<p>To get a list of the requirements of the project, call pip freeze:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>pip freeze
+<span class="nv">Django</span><span class="o">==</span>1.6.2
+<span class="nv">WebOb</span><span class="o">==</span>1.3.1
+.......
+<span class="nv">waitress</span><span class="o">==</span>0.8.8
+<span class="nv">wsgiref</span><span class="o">==</span>0.1.2
+</pre></div>
+</div>
+<p>Some of these requirements are only needed for development, so let&#8217;s split the requirements in 2 lists: one for development, and one for deployment.
+The following requirements should go in a requirements.txt file at the root of your project:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">Django</span><span class="o">==</span><span class="mf">1.6</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">argparse</span><span class="o">==</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">dj</span><span class="o">-</span><span class="n">database</span><span class="o">-</span><span class="n">url</span><span class="o">==</span><span class="mf">0.2</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">dj</span><span class="o">-</span><span class="n">static</span><span class="o">==</span><span class="mf">0.0</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">django</span><span class="o">-</span><span class="n">allauth</span><span class="o">==</span><span class="mf">0.15</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">django</span><span class="o">-</span><span class="n">bootstrap3</span><span class="o">==</span><span class="mf">2.5</span><span class="o">.</span><span class="mi">6</span>
+<span class="n">gunicorn</span><span class="o">==</span><span class="mf">18.0</span>
+<span class="n">oauthlib</span><span class="o">==</span><span class="mf">0.6</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">psycopg2</span><span class="o">==</span><span class="mf">2.5</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">pystache</span><span class="o">==</span><span class="mf">0.5</span><span class="o">.</span><span class="mi">3</span>
+<span class="n">python</span><span class="o">-</span><span class="n">openid</span><span class="o">==</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">5</span>
+<span class="n">requests</span><span class="o">==</span><span class="mf">2.2</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">requests</span><span class="o">-</span><span class="n">oauthlib</span><span class="o">==</span><span class="mf">0.4</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">six</span><span class="o">==</span><span class="mf">1.5</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">sqlparse</span><span class="o">==</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">11</span>
+<span class="n">static</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">wsgiref</span><span class="o">==</span><span class="mf">0.1</span><span class="o">.</span><span class="mi">2</span>
+</pre></div>
+</div>
+<p>Always put <em>all</em> your project requirements (even dependencies of requirements) in this file. Also always specify an exact version.
+You can have some bad surprises when checking out your project on another machine and some version gets updated silently.</p>
+<p>The following requirements should go in a requirements-dev.txt file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">WebOb</span><span class="o">==</span><span class="mf">1.3</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">WebTest</span><span class="o">==</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">14</span>
+<span class="n">argparse</span><span class="o">==</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">beautifulsoup4</span><span class="o">==</span><span class="mf">4.3</span><span class="o">.</span><span class="mi">2</span>
+<span class="n">django</span><span class="o">-</span><span class="n">debug</span><span class="o">-</span><span class="n">toolbar</span><span class="o">==</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">django</span><span class="o">-</span><span class="n">webtest</span><span class="o">==</span><span class="mf">1.7</span><span class="o">.</span><span class="mi">6</span>
+<span class="n">factory</span><span class="o">-</span><span class="n">boy</span><span class="o">==</span><span class="mf">2.3</span><span class="o">.</span><span class="mi">1</span>
+<span class="n">waitress</span><span class="o">==</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">8</span>
+</pre></div>
+</div>
+<p>Note: if you checkout the project on another machine, you can install all the requirements like this:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>pip install -r requirements-dev.txt
+</pre></div>
+</div>
+<p>Finally you should tell Heroku which version of python to use via a runtime.txt file at the root of your project:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">python</span><span class="o">-</span><span class="mf">2.7</span><span class="o">.</span><span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="prepare-the-notes-web-app-on-heroku">
+<h2>Prepare the notes web app on Heroku<a class="headerlink" href="#prepare-the-notes-web-app-on-heroku" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="create-an-account-on-heroku">
+<h3>Create an account on Heroku<a class="headerlink" href="#create-an-account-on-heroku" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://www.heroku.com/">https://www.heroku.com/</a></p>
+</div>
+<div class="section" id="generate-an-ssh-key">
+<h3>Generate an ssh key<a class="headerlink" href="#generate-an-ssh-key" title="Permalink to this headline">¶</a></h3>
+<p>Generate an ssh key and add it to your Heroku account:</p>
+<div class="highlight-bash"><div class="highlight"><pre>pony@Pony-VirtualBox:~<span class="nv">$ </span>ssh-keygen -t rsa
+</pre></div>
+</div>
+<p>Add the public key (~/.ssh/id_rsa.pub) to your Heroku account.</p>
+</div>
+<div class="section" id="create-an-app-on-heroku-and-add-a-postgres-database">
+<h3>Create an app on Heroku and add a postgres database<a class="headerlink" href="#create-an-app-on-heroku-and-add-a-postgres-database" title="Permalink to this headline">¶</a></h3>
+<p>Create an app (either in the US or Europe), and also add the Heroku postgres add-on to the app.</p>
+</div>
+<div class="section" id="push-your-local-git-repository-to-heroku-remote-one">
+<h3>Push your local git repository to Heroku remote one<a class="headerlink" href="#push-your-local-git-repository-to-heroku-remote-one" title="Permalink to this headline">¶</a></h3>
+<p>Add the heroku remote, and push your local repository to Heroku (modify the git url with your own Heroku app name):</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>git remote add heroku git@heroku.com:yourapp.git
+</pre></div>
+</div>
+</div>
+<div class="section" id="set-your-app-configuration-via-environment-variables">
+<h3>Set your app configuration via environment variables<a class="headerlink" href="#set-your-app-configuration-via-environment-variables" title="Permalink to this headline">¶</a></h3>
+<p>Have a look at your Heroku app environment variables (you will have to enter your Heroku credentials):</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ heroku config
+Authentication failure
+Enter your Heroku credentials.
+Email: pinky@acme.com
+Password (typing will be hidden):
+Authentication successful.
+=== notes-last-test Config Vars
+HEROKU_POSTGRESQL_PINK_URL: postgres://somekey.amazonaws.com:5432/someotherkey
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+<p>So far only the database URL is defined. Let&#8217;s add the other environment variables.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>heroku config:set <span class="nv">SECRET_KEY</span><span class="o">=</span><span class="s1">&#39;some-random-key&#39;</span>
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>heroku config:set <span class="nv">ALLOWED_HOSTS</span><span class="o">=</span><span class="s1">&#39;yourapp.herokuapp.com&#39;</span>
+<span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>heroku config:set <span class="nv">DJANGO_SETTINGS_MODULE</span><span class="o">=</span><span class="s1">&#39;notes.settings&#39;</span>
+</pre></div>
+</div>
+<p>No need to set the DEBUG variable, not specifying it defaults to False.</p>
+</div>
+<div class="section" id="tell-heroku-to-use-environment-variables-during-slug-build-step">
+<h3>Tell Heroku to use environment variables during slug build step<a class="headerlink" href="#tell-heroku-to-use-environment-variables-during-slug-build-step" title="Permalink to this headline">¶</a></h3>
+<p>There is one last thing we need to do before deploying. We need to tell Heroku to use our environment variables while building the app slug (<a class="reference external" href="https://devcenter.heroku.com/articles/labs-user-env-compile">https://devcenter.heroku.com/articles/labs-user-env-compile</a>):</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ heroku labs:enable user-env-compile
+Enabling user-env-compile for notes-last-test... done
+WARNING: This feature is experimental and may change or be removed without notice.
+For more information see: http://devcenter.heroku.com/articles/labs-user-env-compile
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="let-s-push-our-local-git-repository-to-heroku-remote">
+<h2>Let&#8217;s push our local git repository to heroku remote<a class="headerlink" href="#let-s-push-our-local-git-repository-to-heroku-remote" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash"><div class="highlight"><pre><span class="o">(</span>hands-on-django<span class="o">)</span>pony@Pony-VirtualBox:~/hands-on-django<span class="nv">$ </span>git push heroku master
+Initializing repository, <span class="k">done</span>.
+Counting objects: 124, <span class="k">done</span>.
+Compressing objects: 100% <span class="o">(</span>105/105<span class="o">)</span>, <span class="k">done</span>.
+Writing objects: 100% <span class="o">(</span>124/124<span class="o">)</span>, 15.81 KiB | 0 bytes/s, <span class="k">done</span>.
+Total 124 <span class="o">(</span>delta 49<span class="o">)</span>, reused 0 <span class="o">(</span>delta 0<span class="o">)</span>
+
+-----&gt; Python app detected
+-----&gt; Preparing Python runtime <span class="o">(</span>python-2.7.5<span class="o">)</span>
+-----&gt; Installing Distribute <span class="o">(</span>0.6.36<span class="o">)</span>
+-----&gt; Installing Pip <span class="o">(</span>1.3.1<span class="o">)</span>
+-----&gt; Installing dependencies using Pip <span class="o">(</span>1.3.1<span class="o">)</span>
+       Downloading/unpacking <span class="nv">Django</span><span class="o">==</span>1.6.2 <span class="o">(</span>from -r requirements.txt <span class="o">(</span>line 1<span class="o">))</span>
+....
+-----&gt; Collecting static files
+   70 static files copied to <span class="s1">&#39;/app/staticfiles&#39;</span>.
+
+-----&gt; Discovering process types
+       Procfile declares types -&gt; web
+
+-----&gt; Compressing... <span class="k">done</span>, 34.3MB
+-----&gt; Launching... <span class="k">done</span>, v8
+       http://yourapp.herokuapp.com deployed to Heroku
+</pre></div>
+</div>
+<p>Now you can open <a class="reference external" href="http://yourapp.herokuapp.com">http://yourapp.herokuapp.com</a> in a browser.</p>
+<p>You will get an internal server error (500) if you try to login, because the far the database does not contain any of the app tables.
+Let&#8217;s call syncdb:</p>
+<div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ heroku run python manage.py syncdb
+Running `python manage.py syncdb` attached to terminal... up, run.9823
+Creating tables ...
+Creating table django_admin_log
+Creating table auth_permission
+Creating table auth_group_permissions
+Creating table auth_group
+Creating table auth_user_groups
+Creating table auth_user_user_permissions
+Creating table auth_user
+Creating table django_content_type
+Creating table django_session
+Creating table django_site
+Creating table notesapp_note
+Creating table account_emailaddress
+Creating table account_emailconfirmation
+Creating table socialaccount_socialapp_sites
+Creating table socialaccount_socialapp
+Creating table socialaccount_socialaccount
+Creating table socialaccount_socialtoken
+
+You just installed Django&#39;s auth system, which means you don&#39;t have any superusers defined.
+Would you like to create one now? (yes/no): yes
+Username (leave blank to use &#39;u20149&#39;): someadminname
+Email address: someadminname@acme.com
+Password:
+Password (again):
+Superuser created successfully.
+Installing custom SQL ...
+Installing indexes ...
+Installed 0 object(s) from 0 fixture(s)
+(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
+</pre></div>
+</div>
+<p>Try to login again with your admin credentials. This time it should work.</p>
+<p>If you try to sign-up with another user, call &#8216;heroku logs&#8217; to click on the activation link (no SMTP server is set up so far).</p>
+<p>If the static files are not served, have a look at the deploy console logs and look for &#8220;Collecting static files&#8221;. This should be done while Heroku builds the app slug.
+Verify your settings.py static configuration and that you called &#8216;heroku labs:enable user-env-compile&#8217;.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Deploying the notes web app</a><ul>
+<li><a class="reference internal" href="#how-is-this-going-to-work">How is this going to work?</a></li>
+<li><a class="reference internal" href="#some-documentation-pointers-to-get-started">Some documentation pointers to get started</a></li>
+<li><a class="reference internal" href="#defining-the-notes-app-configuration-as-environment-variables">Defining the notes app configuration as environment variables</a></li>
+<li><a class="reference internal" href="#telling-heroku-to-run-the-notes-app-with-gunicorn">Telling Heroku to run the notes app with gunicorn</a></li>
+<li><a class="reference internal" href="#serving-static-files-via-heroku-and-dj-static">Serving static files via Heroku and dj-static</a></li>
+<li><a class="reference internal" href="#listing-the-requirements-of-the-project-for-deployment">Listing the requirements of the project for deployment</a></li>
+<li><a class="reference internal" href="#prepare-the-notes-web-app-on-heroku">Prepare the notes web app on Heroku</a><ul>
+<li><a class="reference internal" href="#create-an-account-on-heroku">Create an account on Heroku</a></li>
+<li><a class="reference internal" href="#generate-an-ssh-key">Generate an ssh key</a></li>
+<li><a class="reference internal" href="#create-an-app-on-heroku-and-add-a-postgres-database">Create an app on Heroku and add a postgres database</a></li>
+<li><a class="reference internal" href="#push-your-local-git-repository-to-heroku-remote-one">Push your local git repository to Heroku remote one</a></li>
+<li><a class="reference internal" href="#set-your-app-configuration-via-environment-variables">Set your app configuration via environment variables</a></li>
+<li><a class="reference internal" href="#tell-heroku-to-use-environment-variables-during-slug-build-step">Tell Heroku to use environment variables during slug build step</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#let-s-push-our-local-git-repository-to-heroku-remote">Let&#8217;s push our local git repository to heroku remote</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="add_delete_notes_views.html"
+                        title="previous chapter">Let&#8217;s implement views to add and delete notes</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="secure_app.html"
+                        title="next chapter">Fixing some security issues</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/deploy_to_heroku.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="secure_app.html" title="Fixing some security issues"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="add_delete_notes_views.html" title="Let’s implement views to add and delete notes"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

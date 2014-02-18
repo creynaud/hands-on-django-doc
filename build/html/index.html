@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Hands on Django Workshop &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="#" />
+    <link rel="next" title="Hands on Django: what we are going to do" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="intro.html" title="Hands on Django: what we are going to do"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="hands-on-django-workshop">
+<h1>Hands on Django Workshop<a class="headerlink" href="#hands-on-django-workshop" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Hands on Django: what we are going to do</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python_survival_kit.html">Python Survival Kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="create_django_project.html">Create the Notes Django project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="create_django_project.html#creating-a-virtualenv">Creating a virtualenv</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_django_project.html#creating-the-django-project">Creating the Django project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_django_project.html#running-the-admin-and-syncing-the-database">Running the admin and syncing the database</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="home.html">Let&#8217;s implement a 1st view: the home page</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="home.html#implementing-the-view">Implementing the view</a></li>
+<li class="toctree-l2"><a class="reference internal" href="home.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="notesapp.html">Notes App</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="notesapp.html#django-projects-vs-django-apps">Django projects vs. Django apps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notesapp.html#creating-the-notes-app">Creating the notes app</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notesapp.html#plugging-the-notes-app-in-the-project">Plugging the notes app in the project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notesapp.html#implementing-the-notes-view">Implementing the notes view</a></li>
+<li class="toctree-l2"><a class="reference internal" href="notesapp.html#testing">Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="my_notes_class_based_view.html">My Notes class based view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="django_allauth.html">Authentication with django allauth</a></li>
+<li class="toctree-l1"><a class="reference internal" href="note_detail_view.html">Let&#8217;s implement a note detail view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="note_edition_view.html">Let&#8217;s implement a note edition view</a></li>
+<li class="toctree-l1"><a class="reference internal" href="base_template.html">Templates refactoring: base template and links between pages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="more_templates_refactoring.html">More templates refactoring</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="more_templates_refactoring.html#using-bootstrap-in-base-html">Using bootstrap in base.html</a></li>
+<li class="toctree-l2"><a class="reference internal" href="more_templates_refactoring.html#refactor-the-notes-views-to-always-show-the-list-of-notes">Refactor the notes views to always show the list of notes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="add_delete_notes_views.html">Let&#8217;s implement views to add and delete notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deploy_to_heroku.html">Deploying the notes web app</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#how-is-this-going-to-work">How is this going to work?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#some-documentation-pointers-to-get-started">Some documentation pointers to get started</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#defining-the-notes-app-configuration-as-environment-variables">Defining the notes app configuration as environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#telling-heroku-to-run-the-notes-app-with-gunicorn">Telling Heroku to run the notes app with gunicorn</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#serving-static-files-via-heroku-and-dj-static">Serving static files via Heroku and dj-static</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#listing-the-requirements-of-the-project-for-deployment">Listing the requirements of the project for deployment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#prepare-the-notes-web-app-on-heroku">Prepare the notes web app on Heroku</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deploy_to_heroku.html#let-s-push-our-local-git-repository-to-heroku-remote">Let&#8217;s push our local git repository to heroku remote</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="secure_app.html">Fixing some security issues</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="secure_app.html#check-your-pony">Check your pony</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure_app.html#let-s-modify-the-settings-py">Let&#8217;s modify the settings.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="django_rest_framework.html">Add a REST&nbsp;API to your app!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what_to_do_next.html">What to do next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ubuntu_vm.html">Worshop Ubuntu VM</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Hands on Django Workshop</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="next chapter">Hands on Django: what we are going to do</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="intro.html" title="Hands on Django: what we are going to do"
+             >next</a> |</li>
+        <li><a href="#">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

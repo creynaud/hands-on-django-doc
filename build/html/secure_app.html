@@ -1,0 +1,138 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fixing some security issues &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Add a REST API to your app!" href="django_rest_framework.html" />
+    <link rel="prev" title="Deploying the notes web app" href="deploy_to_heroku.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="django_rest_framework.html" title="Add a REST API to your app!"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="deploy_to_heroku.html" title="Deploying the notes web app"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="fixing-some-security-issues">
+<h1>Fixing some security issues<a class="headerlink" href="#fixing-some-security-issues" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="check-your-pony">
+<h2>Check your pony<a class="headerlink" href="#check-your-pony" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="http://ponycheckup.com/">http://ponycheckup.com/</a></p>
+<p>Note from ponycheckup: &#8220;This is not a replacement for a full security audit.&#8221;</p>
+</div>
+<div class="section" id="let-s-modify-the-settings-py">
+<h2>Let&#8217;s modify the settings.py<a class="headerlink" href="#let-s-modify-the-settings-py" title="Permalink to this headline">¶</a></h2>
+<p>If you read Django&#8217;s deployment checklist (<a class="reference external" href="https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/">https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/</a>), you should have read the https recommendations.
+Add the following to your settings.py if this is not already done:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="ow">not</span> <span class="n">DEBUG</span><span class="p">:</span>
+    <span class="n">SESSION_COOKIE_SECURE</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">CSRF_COOKIE_SECURE</span> <span class="o">=</span> <span class="bp">True</span>
+</pre></div>
+</div>
+<p>This way session and csrf cookies will never be transmitted over http. But our website still does not force https.</p>
+<p>Let&#8217;s install django-secure (<a class="reference external" href="https://pypi.python.org/pypi/django-secure">https://pypi.python.org/pypi/django-secure</a>). Don&#8217;t forget to add it in requirements.txt too.
+Read the doc and modify your settings.py accordingly.</p>
+<p>Re-deploy to Heroku and check that trying to access your app via http redirects to https.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fixing some security issues</a><ul>
+<li><a class="reference internal" href="#check-your-pony">Check your pony</a></li>
+<li><a class="reference internal" href="#let-s-modify-the-settings-py">Let&#8217;s modify the settings.py</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="deploy_to_heroku.html"
+                        title="previous chapter">Deploying the notes web app</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="django_rest_framework.html"
+                        title="next chapter">Add a REST&nbsp;API to your app!</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/secure_app.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="django_rest_framework.html" title="Add a REST API to your app!"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="deploy_to_heroku.html" title="Deploying the notes web app"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>

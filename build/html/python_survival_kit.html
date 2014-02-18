@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Python Survival Kit &mdash; hands-on-django 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="hands-on-django 1.0 documentation" href="index.html" />
+    <link rel="next" title="Create the Notes Django project" href="create_django_project.html" />
+    <link rel="prev" title="Hands on Django: what we are going to do" href="intro.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="create_django_project.html" title="Create the Notes Django project"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Hands on Django: what we are going to do"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="python-survival-kit">
+<h1>Python Survival Kit<a class="headerlink" href="#python-survival-kit" title="Permalink to this headline">¶</a></h1>
+<p>Python is a dynamically typed language. Indentation determines the grouping of statements.</p>
+<p>Copy the following code into a complex.py file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="n">ascii_string</span> <span class="o">=</span> <span class="s">&quot;https://django-notes.herokuapp.com&quot;</span>
+<span class="n">unicode_string</span> <span class="o">=</span> <span class="s">u&quot;Éèêà, je suis une string unicode&quot;</span>
+
+<span class="n">list_of_words</span> <span class="o">=</span> <span class="p">[</span><span class="s">u&quot;The&quot;</span><span class="p">,</span> <span class="s">&quot;cat&quot;</span><span class="p">,</span> <span class="s">&quot;ate&quot;</span><span class="p">,</span> <span class="s">&quot;my&quot;</span><span class="p">,</span> <span class="s">&quot;source&quot;</span><span class="p">,</span> <span class="s">&quot;code&quot;</span><span class="p">]</span>
+<span class="n">tuple_with_one_element</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">)</span>
+<span class="n">tuple_with_several_element</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">dictionary</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;key&#39;</span><span class="p">:</span> <span class="s">&#39;value&#39;</span><span class="p">}</span>
+<span class="n">dictionary</span><span class="p">[</span><span class="s">&#39;another_key&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;another_value&#39;</span>
+
+
+<span class="k">def</span> <span class="nf">print_list</span><span class="p">(</span><span class="n">notes</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">:</span>
+        <span class="k">print</span> <span class="n">note</span>
+
+<span class="k">def</span> <span class="nf">parity</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;even&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">&quot;odd&quot;</span>
+
+<span class="k">class</span> <span class="nc">Complex</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="n">real</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">imag</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">imag</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Complex</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real</span> <span class="o">=</span> <span class="n">real</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">imag</span> <span class="o">=</span> <span class="n">imag</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">u&quot;{0}+i{1}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">imag</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_pure_real</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">imag</span> <span class="o">==</span> <span class="mf">0.0</span>
+</pre></div>
+</div>
+<p>Launch the python interpreter in the directory containing the complex.py file:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>python
+<span class="nv">$ </span>Python 2.7.5+ <span class="o">(</span>default, Sep 19 2013, 13:48:49<span class="o">)</span>
+<span class="o">[</span>GCC 4.8.1<span class="o">]</span> on linux2
+Type <span class="s2">&quot;help&quot;</span>, <span class="s2">&quot;copyright&quot;</span>, <span class="s2">&quot;credits&quot;</span> or <span class="s2">&quot;license&quot;</span> <span class="k">for </span>more information.
+&gt;&gt;&gt; from complex import Complex
+&gt;&gt;&gt; <span class="nv">z</span> <span class="o">=</span> Complex<span class="o">(</span>1.0, 2.0<span class="o">)</span>
+&gt;&gt;&gt; print z
+&lt;complex.Complex object at 0x7f37b155e3d0&gt;
+&gt;&gt;&gt; print u<span class="s2">&quot;{0}&quot;</span>.format<span class="o">(</span>z<span class="o">)</span>
+1.0+i2.0
+&gt;&gt;&gt; z.is_pure_real<span class="o">()</span>
+False
+&gt;&gt;&gt; import complex
+&gt;&gt;&gt; print complex.dictionary
+<span class="o">{</span><span class="s1">&#39;another_key&#39;</span>: <span class="s1">&#39;another_value&#39;</span>, <span class="s1">&#39;key&#39;</span>: <span class="s1">&#39;value&#39;</span><span class="o">}</span>
+&gt;&gt;&gt; print complex.dictionary<span class="o">[</span><span class="s1">&#39;key&#39;</span><span class="o">]</span>
+value
+&gt;&gt;&gt; complex.some_function<span class="o">([</span><span class="s2">&quot;Test&quot;</span>, <span class="s2">&quot;String&quot;</span><span class="o">])</span>
+Test
+String
+&gt;&gt;&gt;
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="previous chapter">Hands on Django: what we are going to do</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="create_django_project.html"
+                        title="next chapter">Create the Notes Django project</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/python_survival_kit.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="create_django_project.html" title="Create the Notes Django project"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Hands on Django: what we are going to do"
+             >previous</a> |</li>
+        <li><a href="index.html">hands-on-django 1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Claire Reynaud.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.1.
+    </div>
+  </body>
+</html>
