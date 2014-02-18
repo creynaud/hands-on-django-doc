@@ -29,7 +29,7 @@ Now let's say we want notes to be private. So only the owner of the note should 
 Let's refactor this view, rename it my_notes, and list only the notes of the logged in user. You will have to modify the queryset and add a decorator to the view (login_required).
 
 .. code-block:: python
-    :emphasize-lines: 1,13
+    :emphasize-lines: 1,7,9,13,14
 
     +from django.contrib.auth.decorators import login_required
      from django.views.generic.list import ListView
@@ -37,13 +37,13 @@ Let's refactor this view, rename it my_notes, and list only the notes of the log
      from .models import Note
 
 
-     class MyNotes(ListView):
+    +class MyNotes(ListView):
          model = Note
-         template_name = 'notesapp/my_notes.html'
+    +    template_name = 'notesapp/my_notes.html'
          context_object_name = 'notes'
 
          def get_queryset(self):
-     +       return Note.objects.filter(owner=self.request.user)
+    +        return Note.objects.filter(owner=self.request.user)
     +my_notes = login_required(MyNotes.as_view())
 
 

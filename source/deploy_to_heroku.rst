@@ -6,7 +6,7 @@ How is this going to work?
 
 Here is how the notes web app will run on Heroku:
 
-* We are going to push the web app git local repository to a remote heroku repository.
+* We are going to push the git local repository of our web app to a remote heroku repository.
 * After the push, Heroku will download our app requirements, build the app and create a "slug". A "slug" is a snapshot of our app that can be easily deployed on a Heroku "dyno". A Heroku "dyno" can be seen as a small Virtual Machine with an ephemeral file system. To scale the app up or down, one can add/remove "dynos".
 * An instance of the note app that runs on a "dyno" is stateless. Sessions are tracked in the database, not inside the "dyno" itself.
 * The Postgresql database can be provided by Heroku via an add-on: https://addons.heroku.com/
@@ -311,7 +311,7 @@ Let's push our local git repository to heroku remote
 
 Now you can open http://yourapp.herokuapp.com in a browser.
 
-You will get an internal server error (500) if you try to login, because the far the database does not contain any of the app tables.
+You will get an internal server error (500) if you try to login, because so far the database does not contain any of the app tables.
 Let's call syncdb:
 
 .. code-block:: bash

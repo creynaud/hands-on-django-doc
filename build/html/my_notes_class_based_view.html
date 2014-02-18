@@ -79,15 +79,15 @@ Let&#8217;s refactor this view, rename it my_notes, and list only the notes of t
  <span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Note</span>
 
 
- <span class="k">class</span> <span class="nc">MyNotes</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
-     <span class="n">model</span> <span class="o">=</span> <span class="n">Note</span>
-     <span class="n">template_name</span> <span class="o">=</span> <span class="s">&#39;notesapp/my_notes.html&#39;</span>
-     <span class="n">context_object_name</span> <span class="o">=</span> <span class="s">&#39;notes&#39;</span>
+<span class="hll"><span class="o">+</span><span class="k">class</span> <span class="nc">MyNotes</span><span class="p">(</span><span class="n">ListView</span><span class="p">):</span>
+</span>     <span class="n">model</span> <span class="o">=</span> <span class="n">Note</span>
+<span class="hll"><span class="o">+</span>    <span class="n">template_name</span> <span class="o">=</span> <span class="s">&#39;notesapp/my_notes.html&#39;</span>
+</span>     <span class="n">context_object_name</span> <span class="o">=</span> <span class="s">&#39;notes&#39;</span>
 
      <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="hll"> <span class="o">+</span>       <span class="k">return</span> <span class="n">Note</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
-</span><span class="o">+</span><span class="n">my_notes</span> <span class="o">=</span> <span class="n">login_required</span><span class="p">(</span><span class="n">MyNotes</span><span class="o">.</span><span class="n">as_view</span><span class="p">())</span>
-</pre></div>
+<span class="hll"><span class="o">+</span>        <span class="k">return</span> <span class="n">Note</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
+</span><span class="hll"><span class="o">+</span><span class="n">my_notes</span> <span class="o">=</span> <span class="n">login_required</span><span class="p">(</span><span class="n">MyNotes</span><span class="o">.</span><span class="n">as_view</span><span class="p">())</span>
+</span></pre></div>
 </div>
 <p>You can login/logout via the admin (<a class="reference external" href="http://127.0.0.1:8000/admin/">http://127.0.0.1:8000/admin/</a>) to see what happens when you access the view when you are logged in or not.
 What happens when you access <a class="reference external" href="http://127.0.0.1:8000/notes/">http://127.0.0.1:8000/notes/</a> and you are not logged in (hint: this will be the subject of the next step of this workshop)?</p>

@@ -55,7 +55,7 @@
 <h2>How is this going to work?<a class="headerlink" href="#how-is-this-going-to-work" title="Permalink to this headline">¶</a></h2>
 <p>Here is how the notes web app will run on Heroku:</p>
 <ul class="simple">
-<li>We are going to push the web app git local repository to a remote heroku repository.</li>
+<li>We are going to push the git local repository of our web app to a remote heroku repository.</li>
 <li>After the push, Heroku will download our app requirements, build the app and create a &#8220;slug&#8221;. A &#8220;slug&#8221; is a snapshot of our app that can be easily deployed on a Heroku &#8220;dyno&#8221;. A Heroku &#8220;dyno&#8221; can be seen as a small Virtual Machine with an ephemeral file system. To scale the app up or down, one can add/remove &#8220;dynos&#8221;.</li>
 <li>An instance of the note app that runs on a &#8220;dyno&#8221; is stateless. Sessions are tracked in the database, not inside the &#8220;dyno&#8221; itself.</li>
 <li>The Postgresql database can be provided by Heroku via an add-on: <a class="reference external" href="https://addons.heroku.com/">https://addons.heroku.com/</a></li>
@@ -312,7 +312,7 @@ Total 124 <span class="o">(</span>delta 49<span class="o">)</span>, reused 0 <sp
 </pre></div>
 </div>
 <p>Now you can open <a class="reference external" href="http://yourapp.herokuapp.com">http://yourapp.herokuapp.com</a> in a browser.</p>
-<p>You will get an internal server error (500) if you try to login, because the far the database does not contain any of the app tables.
+<p>You will get an internal server error (500) if you try to login, because so far the database does not contain any of the app tables.
 Let&#8217;s call syncdb:</p>
 <div class="highlight-bash"><div class="highlight"><pre>(hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ heroku run python manage.py syncdb
 Running `python manage.py syncdb` attached to terminal... up, run.9823
