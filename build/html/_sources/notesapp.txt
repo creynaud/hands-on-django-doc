@@ -101,7 +101,7 @@ In order to use this model, we need to create the corresponding tables in our da
     Installed 0 object(s) from 0 fixture(s)
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
 
-Now let's add the actual current user notes in the 'notes' view.
+Now let's add the actual notes in the 'notes' template's context.
 
 .. code-block:: python
     :emphasize-lines: 1

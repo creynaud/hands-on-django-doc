@@ -132,7 +132,7 @@ Installed 0 object(s) from 0 fixture(s)
 (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$
 </pre></div>
 </div>
-<p>Now let&#8217;s add the actual current user notes in the &#8216;notes&#8217; view.</p>
+<p>Now let&#8217;s add the actual notes in the &#8216;notes&#8217; template&#8217;s context.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="hll"><span class="o">+</span>    <span class="n">context</span> <span class="o">=</span> <span class="n">RequestContext</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;notes&#39;</span><span class="p">:</span> <span class="n">Note</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()})</span>
 </span></pre></div>
 </div>
