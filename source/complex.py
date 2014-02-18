@@ -3,9 +3,9 @@
 ascii_string = "https://django-notes.herokuapp.com"
 unicode_string = u"Éèêà, je suis une string unicode"
 
-list_of_words = [u"The", "cat", "ate", "my", "source", "code"]
+list_of_words = ["The", "cat", "ate", "my", "source", "code"]
 tuple_with_one_element = (1, )
-tuple_with_several_element = (1, 2, 3)
+tuple_with_several_elements = (2014, 2, 18, "Tuesday")
 dictionary = {'key': 'value'}
 dictionary['another_key'] = 'another_value'
 
