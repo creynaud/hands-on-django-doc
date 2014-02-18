@@ -4,9 +4,9 @@ Deploying the notes web app
 How is this going to work?
 --------------------------
 
-Here is how our notes web app will run on Heroku:
+Here is how the notes web app will run on Heroku:
 
-* We are going to push our web app git local repository to a remote heroku origin
+* We are going to push the web app git local repository to a remote heroku repository.
 * After the push, Heroku will download our app requirements, build the app and create a "slug". A "slug" is a snapshot of our app that can be easily deployed on a Heroku "dyno". A Heroku "dyno" can be seen as a small Virtual Machine with an ephemeral file system. To scale the app up or down, one can add/remove "dynos".
 * An instance of the note app that runs on a "dyno" is stateless. Sessions are tracked in the database, not inside the "dyno" itself.
 * The Postgresql database can be provided by Heroku via an add-on: https://addons.heroku.com/
@@ -210,7 +210,13 @@ Finally you should tell Heroku which version of python to use via a runtime.txt 
 Prepare the notes web app on Heroku
 -----------------------------------
 
-Sign-up to Heroku.
+Create an account on Heroku
+```````````````````````````
+
+https://www.heroku.com/
+
+Generate an ssh key
+```````````````````
 
 Generate an ssh key and add it to your Heroku account:
 
@@ -220,13 +226,22 @@ Generate an ssh key and add it to your Heroku account:
 
 Add the public key (~/.ssh/id_rsa.pub) to your Heroku account.
 
+Create an app on Heroku and add a postgres database
+```````````````````````````````````````````````````
+
 Create an app (either in the US or Europe), and also add the Heroku postgres add-on to the app.
 
-Add heroku origin, and push your local repository to heroku:
+Push your local git repository to Heroku remote one
+```````````````````````````````````````````````````
+
+Add the heroku remote, and push your local repository to Heroku (modify the git url with your own Heroku app name):
 
 .. code-block:: bash
 
-    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ git remote add heroku git@heroku.com:notes-last-test.git
+    (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ git remote add heroku git@heroku.com:yourapp.git
+
+Set your app configuration via environment variables
+````````````````````````````````````````````````````
 
 Have a look at your Heroku app environment variables (you will have to enter your Heroku credentials):
 
@@ -251,6 +266,9 @@ So far only the database URL is defined. Let's add the other environment variabl
     (hands-on-django)pony@Pony-VirtualBox:~/hands-on-django$ heroku config:set DJANGO_SETTINGS_MODULE='notes.settings'
 
 No need to set the DEBUG variable, not specifying it defaults to False.
+
+Tell Heroku to use environment variables during slug build step
+```````````````````````````````````````````````````````````````
 
 There is one last thing we need to do before deploying. We need to tell Heroku to use our environment variables while building the app slug (https://devcenter.heroku.com/articles/labs-user-env-compile):
 
